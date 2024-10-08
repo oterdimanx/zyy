@@ -10,7 +10,7 @@ const poppin = Poppins({
 
 
 export const metadata = {
-  title: 'Ecommerce Next App',
+  title: 'Ecommerce Next Zyy App',
   description: 'Developed by Abdullah Moiz',
   authors: [{ name: "Abdullah Moiz", url: 'https://abdullahmoiz.vercel.app/' }],
 }
