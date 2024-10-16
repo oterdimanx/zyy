@@ -11,8 +11,8 @@ const poppin = Poppins({
 
 export const metadata = {
   title: 'Ecommerce Next Zyy-App',
-  description: 'Developed by Abdullah Moiz',
-  authors: [{ name: "Abdullah Moiz", url: 'https://abdullahmoiz.vercel.app/' }],
+  description: 'Ecommerce website selling Zyy products',
+  authors: [{ name: "Terdiman Olivier", url: 'https://www.zyysk8club.com' }],
 }
 
 export default function RootLayout({

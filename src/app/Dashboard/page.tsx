@@ -31,7 +31,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!Cookies.get('token') || user?.role !== 'admin' || user?.email !== 'mrmoiz.dev@gmail.com') {
+    if (user?.role !== 'admin' || user?.email !== 'olivier@terdiman.fr') {
       Router.push('/')
     }
     dispatch(setNavActive('Base'))
