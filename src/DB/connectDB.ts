@@ -4,11 +4,13 @@ import mongoose, { ConnectOptions } from 'mongoose';
 interface connectedOptions extends ConnectOptions{
     useNewUrlParser: boolean,
     useUnifiedTopology: boolean,
+    dbName: string,
 }
 
 const options: connectedOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    dbName: process.env.DB_NAME as string,
 };
 
 // connecting to database

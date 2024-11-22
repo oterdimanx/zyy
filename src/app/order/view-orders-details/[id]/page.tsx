@@ -1,18 +1,17 @@
 "use client"
+
 import { get_order_details } from '@/Services/common/order'
 import { RootState } from '@/Store/store'
 import Loading from '@/app/loading'
 import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { GrDeliver } from 'react-icons/gr'
 import { TbListDetails } from 'react-icons/tb'
 import { useSelector } from 'react-redux'
-import { ToastContainer, toast } from 'react-toastify'
-
-
+import { ToastContainer } from 'react-toastify'
 
 interface userData {
     email: String,
@@ -74,15 +73,14 @@ interface pageParam {
     id: string
 }
 
+export default function Page() {
 
-
-
-export default function Page({ params, searchParams }: { params: pageParam, searchParams: any }) {
     const Router = useRouter();
-
     const user = useSelector((state: RootState) => state.User.userData) as userData | null
     const [orderData, setOrderData] = useState<Order | null>()
     const [loading, setLoading] = useState(true);
+    const useParamObject = useParams<{ id: string }>()
+    const  id  = useParamObject.id;
 
     useEffect(() => {
         const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -91,7 +89,6 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
         }
     }, [Router])
 
-
     useEffect(() => {
         fetchOrdersData();
     }, [])
@@ -99,22 +96,21 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
     const fetchOrdersData = async () => {
 
         if (!user?._id) return Router.push('/')
-        const orderData = await get_order_details(params?.id)
+        const orderData = await get_order_details(id)
         if (orderData?.success) {
-            console.log(orderData?.data)
+            //console.log(orderData?.data)
             setOrderData(orderData?.data)
             setLoading(false)
         } else {
-            toast.error(orderData?.message)
+            //throw new Error (orderData?.message)
             setLoading(false)
         }
     }
 
-
     return (
-        <div className='w-full bg-gray-50 h-screen px-2 py-2'>
-            <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
-                <ul className='dark:text-black'>
+        <div className="w-full bg-gray-50 h-screen px-2 py-2">
+            <div className="text-sm breadcrumbs border-b-2 border-b-orange-600">
+                <ul className="dark:text-black">
                     <li>
                         <Link href={'/'}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
@@ -128,81 +124,77 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
                         </Link>
                     </li>
                     <li >
-
                         <TbListDetails className="w-4 h-4 mr-2 stroke-current" />
                         Order Details
-
                     </li>
                 </ul>
             </div>
             {
                 loading ? <Loading /> :
-                    <div className='w-full h-5/6 dark:text-black overflow-y-auto'>
-                        <div className='w-full flex px-2 flex-wrap items-center  justify-center'>
+                    <div className="w-full h-5/6 dark:text-black overflow-y-auto">
+                        <div className="w-full flex px-2 flex-wrap items-center justify-center">
                             {/*Order product Card */}
                             {
                                 orderData?.orderItems.map((item, index) => {
                                     return (
-                                        <div key={index} className='md:w-96 m-2 w-52 h-52 bg-gray-300  flex md:flex-row  flex-col items-center justify-start'>
-                                            <div className='relative w-1/2 h-full'>
-                                                <Image src={item?.product?.productImage} alt="no Image Found" fill />
+                                        <div key={index} className="md:w-96 m-2 w-52 h-52 bg-gray-300 flex md:flex-row flex-col items-center justify-start">
+                                            <div className="relative w-1/2 h-full">
+                                                <Image src={item?.product?.productImage || './images98.png'} alt="no Image Found" fill />
                                             </div>
-                                            <div className='flex  px-2 py-1 flex-col items-start justify-start'>
-                                                <h1 className='my-2'>{item?.product?.productName}</h1>
-                                                <p className='text-sm my-2 font-semibold'>Rs {item?.product?.productPrice}</p>
-                                                <p className='text-sm  my-2'>Quantity :  <span className='font-semibold'>{item?.qty}</span></p>
+                                            <div className="flex  px-2 py-1 flex-col items-start justify-start">
+                                                <h1 className="my-2">{item?.product?.productName}</h1>
+                                                <p className="text-sm my-2 font-semibold">Rs {item?.product?.productPrice}</p>
+                                                <p className="text-sm  my-2">Quantity :  <span className="font-semibold">{item?.qty}</span></p>
 
                                             </div>
                                         </div>
                                     )
                                 })
                             }
-
                             {/*Order product Card */}
                         </div>
-                        <div className='flex flex-wrap w-full items-center justify-center'>
+                        <div className="flex flex-wrap w-full items-center justify-center">
 
-                            <div className=' border m-2 w-96  flex-col flex items-start justify-start py-2 px-4'>
-                                <h1 className='text-xl font-semibold '>Shipping Address</h1>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                            <div className="border m-2 w-96 flex-col flex items-start justify-start py-2 px-4">
+                                <h1 className="text-xl font-semibold">Shipping Address</h1>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Full Name</p>
-                                    <p className='font-semibold'>{orderData?.shippingAddress?.fullName}</p>
+                                    <p className="font-semibold">{orderData?.shippingAddress?.fullName}</p>
                                 </div>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Address</p>
-                                    <p className='font-semibold'>{orderData?.shippingAddress?.address}</p>
+                                    <p className="font-semibold">{orderData?.shippingAddress?.address}</p>
                                 </div>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>City</p>
-                                    <p className='font-semibold'>{orderData?.shippingAddress?.city}</p>
+                                    <p className="font-semibold">{orderData?.shippingAddress?.city}</p>
                                 </div>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Postal Code</p>
-                                    <p className='font-semibold'>{orderData?.shippingAddress?.postalCode} </p>
+                                    <p className="font-semibold">{orderData?.shippingAddress?.postalCode} </p>
                                 </div>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Country</p>
-                                    <p className='font-semibold'>{orderData?.shippingAddress?.country}</p>
+                                    <p className="font-semibold">{orderData?.shippingAddress?.country}</p>
                                 </div>
                             </div>
-                            <div className=' border m-2 w-96  flex-col flex items-start justify-start py-2 px-4'>
-                                <h1 className='text-xl font-semibold '>Other Details</h1>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                            <div className="border m-2 w-96  flex-col flex items-start justify-start py-2 px-4">
+                                <h1 className="text-xl font-semibold">Other Details</h1>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Items Price</p>
-                                    <p className='font-semibold'>Rs {orderData?.itemsPrice}</p>
+                                    <p className="font-semibold">Rs {orderData?.itemsPrice}</p>
                                 </div>
-
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Tax Price</p>
-                                    <p className='font-semibold'>Rs {orderData?.taxPrice}</p>
+                                    <p className="font-semibold">Rs {orderData?.taxPrice}</p>
                                 </div>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Total Price</p>
-                                    <p className='font-semibold'>Rs {orderData?.totalPrice}</p>
+                                    <p className="font-semibold">Rs {orderData?.totalPrice}</p>
                                 </div>
-                                <div className='flex py-2 w-full text-sm justify-between'>
+                                <div className="flex py-2 w-full text-sm justify-between">
                                     <p>Is Paid</p>
-                                    <p className='font-semibold'>{orderData?.isPaid ? "Done" : "Pending"}</p>
+                                    <p className="font-semibold">{orderData?.isPaid ? "Done" : "Pending"}</p>
                                 </div>
                             </div>
 

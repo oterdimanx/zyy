@@ -10,12 +10,10 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
-
     const registerCategoryModel = await Category.init();
 
     if(!id) return NextResponse.json({status: 400 , success: false, message: 'Please provide Category id.' });
 
-     
       const getData = await Product.find({ 'productCategory' : id }).populate('productCategory' ,' categoryName categorySlug _id')
       if (getData) {
         return NextResponse.json({success  :true , data : getData});

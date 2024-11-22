@@ -4,16 +4,11 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSWRConfig } from "swr"
-import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
-import Image from 'next/image';
 import Loading from '@/app/loading';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import { useRouter } from 'next/navigation';
-import { delete_a_product } from '@/Services/Admin/product';
-import { delete_a_bookmark_item, get_all_bookmark_items } from '@/Services/common/bookmark';
-import { setBookmark } from '@/utils/Bookmark';
 import { update_order_status } from '@/Services/Admin/order';
 
 
@@ -98,10 +93,10 @@ export default function PendingOrdersDataTable() {
   const updateOrderStatus =  async (id: string) => {
     const res =  await update_order_status(id);
     if(res?.success){
-      toast.success(res?.message)
+      //toast.success(res?.message)
       mutate('gettingAllOrdersForAdmin')
     }else{
-      toast.error(res?.message)
+      throw (res?.message)
     }
   }
 

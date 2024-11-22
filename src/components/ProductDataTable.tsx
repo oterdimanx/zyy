@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSWRConfig } from "swr"
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
 import Image from 'next/image';
 import Loading from '@/app/loading';
@@ -11,8 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import { useRouter } from 'next/navigation';
 import { delete_a_product } from '@/Services/Admin/product';
-
-
+import { delete_an_image } from '@/Services/Admin/category';
 
 
 type ProductData = {
@@ -42,7 +41,13 @@ export default function ProductDataTable() {
   const isLoading = useSelector((state: RootState) => state.Admin.productLoading);
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState<ProductData[] | []>([]);
-
+  const [count, setCount] = useState(0);
+  var i = count;
+  const pendingDeleteProduct = {
+    'prod' : '',
+    'count' : count,
+  };
+  const [prodList, setProdList] = useState(pendingDeleteProduct);
 
   useEffect(() => {
     setprodData(data)
@@ -52,11 +57,15 @@ export default function ProductDataTable() {
     setFilteredData(prodData);
   }, [prodData])
 
-
-
-
-
-
+  const askToDeleteProduct = async (id: string) => {
+    if( '' == prodList.prod) {
+      i++
+      pendingDeleteProduct.count = i;
+      pendingDeleteProduct.prod = id;
+      setCount(i)
+      setProdList(pendingDeleteProduct);
+    }
+  }
 
   const columns = [
     {
@@ -71,33 +80,36 @@ export default function ProductDataTable() {
     },
     {
       name: 'Image',
-      cell: (row: ProductData) => <Image src={row?.productImage} alt='No Image Found' className='py-2' width={100} height={100} />
+      cell: (row: ProductData) => <Image src={row?.productImage || '/pants.png'} alt="No Image Found" className="py-2" width={100} height={100} style={{ width: 'auto', height: 'auto' }}/>
     },
     {
       name: 'Action',
       cell: (row: ProductData) => (
-        <div className='flex items-center justify-start px-2 h-20'>
-          <button onClick={() => router.push(`/product/update-product/${row?._id}`)} className=' w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700'>Update</button>
-          <button onClick={() => handleDeleteProduct(row?._id)} className=' w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700'>Delete</button>
+        <div className="flex items-center justify-start px-2 h-20">
+          <button onClick={() => router.push(`/product/update-product/${row?._id}`)} className="w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700">Update</button>
+          {
+            count > 0 && prodList?.prod == row?._id ? 
+            <button onClick={() => handleDeleteProduct(row?._id, row?.productImage)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Are you sure ? Click again to confirm</button> : 
+            <button onClick={() => askToDeleteProduct(row?._id)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Delete</button>
+          }
         </div>
       )
     },
 
   ];
 
-
-
-  const handleDeleteProduct = async (id: string) => {
+  const handleDeleteProduct = async (id: string, url: string) => {
     const res = await delete_a_product(id);
+    
     if (res?.success) {
-      toast.success(res?.message)
+      const imgRes = await delete_an_image(url);
+      //toast.success(res?.message)
       mutate('/gettingAllProductsFOrAdmin')
     }
     else {
-      toast.error(res?.message)
+      throw new Error (res?.message)
     }
   }
-
 
   useEffect(() => {
     if (search === '') {
@@ -109,11 +121,7 @@ export default function ProductDataTable() {
         return itemData.indexOf(textData) > -1;
       }))
     }
-
-
   }, [search, prodData])
-
-
 
   return (
     <div className='w-full h-full'>
@@ -133,12 +141,12 @@ export default function ProductDataTable() {
         progressComponent={<Loading />}
         subHeader
         subHeaderComponent={
-          <input className='w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600' type={"search"}
+          <input className='w-60 dark:bg-transparent py-2 px-2 outline-none  border-b-2 border-orange-600' type={"search"}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={"Category Name"} />
         }
-        className="bg-white px-4 h-4/6 "
+        className="bg-white px-4 h-4/6"
       />
 
     </div>

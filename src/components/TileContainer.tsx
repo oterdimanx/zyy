@@ -11,7 +11,6 @@ interface tile {
 export default function TileContainer() {
   const [data , setData] =  useState(GettingDatasLength());
 
-
   return (
     <>
  {

@@ -18,15 +18,10 @@ interface userData {
   name: String
 }
 
-
-
 export default function Page() {
   const Router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.User.userData) as userData | null
-
-
-
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -34,7 +29,6 @@ export default function Page() {
       Router.push('/')
     }
   }, [Router])
-
 
   useEffect(() => {
     fetchOrdersData();
@@ -49,9 +43,6 @@ export default function Page() {
       toast.error(orderData?.message)
     }
   }
-
-
-
 
   return (
     <div className='w-full bg-gray-50 h-screen px-2 py-2'>

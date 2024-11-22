@@ -41,7 +41,7 @@ export default function AdminNavbar() {
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 relative rounded-full">
-                            <Image className='rounded-full' fill alt='none' src="/profile.jpg" />
+                            <Image className='rounded-full' fill alt='none' src="/profile.jpg" sizes='50vw'/>
                         </div>
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-50 rounded-box w-52">

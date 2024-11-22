@@ -1,7 +1,5 @@
 
-
 import Cookies from "js-cookie";
-
 
 export const get_all_categories = async () => {
   try {
@@ -32,7 +30,6 @@ export const add_new_category = async (formData: any) => {
   }
 }
 
-
 export const get_category_by_id = async (id:string) => {
     try {
       const res = await fetch(`/api/common/category/get-category-by-id?id=${id}`, {
@@ -62,7 +59,6 @@ export const delete_a_category = async (id:string) => {
   }
 }
 
-
 export const update_a_category = async (formData : any) => {
   try {
     const res = await fetch(`/api/Admin/category/update-category`, {
@@ -81,6 +77,20 @@ export const update_a_category = async (formData : any) => {
   }
 }
 
+export const delete_an_image = async (id:string) => {
+  try {
+    const res = await fetch(`/api/Admin/image/delete-image?id=${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${Cookies.get('token')}`
+      },
+    })
 
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log('Error in deleting Image (service) =>', error)
+  }
+}
 
 

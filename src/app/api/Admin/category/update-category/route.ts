@@ -10,24 +10,20 @@ export async function PUT(req: Request) {
 
     if (isAuthenticated === 'admin') {
       const data = await req.json();
-      const  {name , _id  , description  , slug } = data
-
-      const saveData = await Category.findOneAndUpdate(_id , { categoryName : name , categoryDescription : description ,categorySlug: slug}  , { new: true });
-
+      const  {_id, name, description, image, slug, sizes} = data
+//console.log('sizes !!!!!!!!!!!!!!!' + sizes)
+      const saveData = await Category.findOneAndUpdate({_id: _id}, {categoryName : name, categoryDescription : description, categoryImage: image, categorySlug: slug, categorySizes: sizes}  , { new: true });
+      //const saveData = false;
       if (saveData) {
-
+        console.log(saveData)
         return NextResponse.json({ success: true, message: "Category updated successfully!" });
-
       } else {
-
+        //console.log('error')
         return NextResponse.json({ success: false, message: "Failed to update the category. Please try again!" });
-
       }
 
     } else {
-
       return NextResponse.json({ success: false, message: "You are not authorized." });
-
     }
 
   } catch (error) {

@@ -64,7 +64,7 @@ export default function ProductCard({ productName, productFeatured, productImage
     return (
         <div  className="card text-black cursor-pointer card-compact m-3 w-80 bg-white shadow-xl relative">
             <div onClick={() => router.push(`/product/product-detail/${_id}`)} className='w-full rounded relative h-60'>
-                <Image src={productImage || '/images98.jpg'} alt='no Image' className='rounded' fill />
+                <Image src={productImage || '/images98.jpg'} alt='no Image' className='rounded' fill sizes='50vw' />
             </div>
 
             <div className="card-body">

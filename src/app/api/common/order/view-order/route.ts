@@ -14,7 +14,6 @@ export async function GET(req: Request) {
     const id = searchParams.get('id');
 
     const registerProductModel =  await Product.init();
-    
     const registerUserModel =  await User.init();
 
     if (!id) return NextResponse.json({ status: 400, success: false, message: 'Please Login !' });
@@ -31,7 +30,6 @@ export async function GET(req: Request) {
     } else {
       return NextResponse.json({ success: false, message: "You are not authorized Please login!" });
     }
-
 
   } catch (error) {
     console.log('Error in getting  Orders Data :', error);

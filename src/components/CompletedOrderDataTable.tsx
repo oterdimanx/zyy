@@ -4,17 +4,10 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSWRConfig } from "swr"
-import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
-import Image from 'next/image';
-import Loading from '@/app/loading';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import { useRouter } from 'next/navigation';
-import { delete_a_product } from '@/Services/Admin/product';
-import { delete_a_bookmark_item, get_all_bookmark_items } from '@/Services/common/bookmark';
-import { setBookmark } from '@/utils/Bookmark';
-
 
 interface Order {
     createdAt: string;
@@ -65,14 +58,12 @@ interface Order {
     _id: string;
   }
 
-
 interface userData {
     email: String,
     role: String,
     _id: String,
     name: String
 }
-
 
 export default function CompletedOrderDataTable() {
     const { mutate } = useSWRConfig()
@@ -82,7 +73,6 @@ export default function CompletedOrderDataTable() {
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState<Order[] | []>([]);
 
-
   useEffect(() => {
     const filteredCompletedOrder =  data?.filter((item) => item?.isDelivered === true)
     setOrderData(filteredCompletedOrder)
@@ -91,12 +81,6 @@ export default function CompletedOrderDataTable() {
   useEffect(() => {
     setFilteredData(orderData);
   }, [orderData])
-
-
-
-
-
-
 
   const columns = [
     {
@@ -118,17 +102,12 @@ export default function CompletedOrderDataTable() {
       name: 'Action',
       cell: (row: Order) => (
 
-        <button onClick={() => router.push(`/order/view-orders-details/${row?._id}`)} className=' w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700'>Details</button>
+        <button onClick={() => router.push(`/order/view-orders-details/${row?._id}`)} className="w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700">Details</button>
 
       )
     },
 
   ];
-
-
-
-
-
 
   useEffect(() => {
     if (search === '') {
@@ -142,10 +121,8 @@ export default function CompletedOrderDataTable() {
     }
   }, [search, orderData])
 
-
-
   return (
-    <div className='w-full h-full'>
+    <div className="w-full h-full">
       <DataTable
         columns={columns}
         data={filteredData || []}
@@ -160,14 +137,13 @@ export default function CompletedOrderDataTable() {
         persistTableHead
         subHeader
         subHeaderComponent={
-          <input className='w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600' type={"search"}
+          <input className="w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600" type={"search"}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={"Orders ID"} />
         }
-        className="bg-white px-4 h-5/6 "
+        className="bg-white px-4 h-5/6"
       />
-
     </div>
   )
 }

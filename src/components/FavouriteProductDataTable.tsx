@@ -81,7 +81,7 @@ export default function FavouriteProductDataTable() {
         },
         {
             name: 'Image',
-            cell: (row: BookmarkItem) => <Image src={row?.productID?.productImage} alt='No Image Found' className='py-2' width={100} height={100} />
+            cell: (row: BookmarkItem) => <Image src={row?.productID?.productImage || 'pants.png'} alt='No Image Found' className='py-2' width={100} height={100} />
         },
         {
             name: 'Action',

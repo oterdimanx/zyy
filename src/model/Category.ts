@@ -1,13 +1,11 @@
 import mongoose from 'mongoose';
 
-
-
 const CategorySchema = new mongoose.Schema({
     categoryName : String,
-    categoryDescription :String ,
+    categoryDescription : String ,
     categoryImage : String ,
-    categorySlug : String
-
+    categorySlug : String ,
+    categorySizes : String ,
 },{timestamps : true});
 
 const Category = mongoose.models.Categories || mongoose.model('Categories', CategorySchema);

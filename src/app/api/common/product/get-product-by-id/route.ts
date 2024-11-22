@@ -13,9 +13,7 @@ export async function GET(req: Request) {
 
     if (!id) return NextResponse.json({ status: 400, success: false, message: 'Please provide Product id.' });
 
-
     const registerCategoryModel = await Category.init();
-
 
     const getData = await Product.findById(id).populate('productCategory', ' categoryName categorySlug _id')
     if (getData) {

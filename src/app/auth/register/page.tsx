@@ -10,7 +10,6 @@ import Cookies from 'js-cookie';
 import Navbar from '@/components/Navbar';
 import { TailSpin } from 'react-loader-spinner';
 
-
 export default function  Register (){
   const router = useRouter();
   
@@ -20,19 +19,14 @@ export default function  Register (){
     }
   },[router])
 
-
- 
-
-
-  
   const [formData, setFormData] = useState({ email: "", password: "" , name : "" });
   const [error, setError] = useState({ email: "", password: "", name: '' });
-  const [loading , setLoding] = useState(false);
+  const [loading , setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
     event.preventDefault();
-    setLoding(true);
+    setLoading(true);
     if (!formData.email) {
       setError({ ...error, email: "Email Field is Required" })
       return;
@@ -48,23 +42,22 @@ export default function  Register (){
 
     const data = await register_me(formData);
     if (data.success) {
-      setLoding(false);
+      setLoading(false);
       toast.success(data.message);
       setTimeout(() => {
         router.push('/auth/login');
       }, 2000);
     }
     else {
-      setLoding(false);
+      setLoading(false);
       toast.error(data.message);
     }
   }
 
-
   return (
     <>
     <Navbar />
-    <div className='w-full h-screen bg-gray-50 '>
+    <div className='w-full h-screen bg-gray-50'>
       <div className="flex flex-col text-center items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0 shadow-xl">
 
         <div className="w-full bg-white rounded-lg shadow text-black md:mt-0 sm:max-w-md xl:p-0 ">
@@ -94,23 +87,20 @@ export default function  Register (){
                   error.password && <p className="text-sm text-red-500">{error.password}</p>
                 }
               </div>
-
               {
-                                    loading ? <button type="button" className="w-full flex items-center justify-center text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                                        <TailSpin
-                                            height="20"
-                                            width="20"
-                                            color="white"
-                                            ariaLabel="tail-spin-loading"
-                                            radius="1"
-                                            wrapperStyle={{}}
-                                            wrapperClass=""
-                                            visible={true}
-                                        />
-                                        </button> : <button type="submit" className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign up</button>
-                                }
-
-              
+                  loading ? <button type="button" className="w-full flex items-center justify-center text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                      <TailSpin
+                          height="20"
+                          width="20"
+                          color="white"
+                          ariaLabel="tail-spin-loading"
+                          radius="1"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                          visible={true}
+                      />
+                      </button> : <button type="submit" className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign up</button>
+              }
               <p className="text-sm  text-gray-500 ">
                 Already have an account  <Link href="/auth/login" className="font-medium text-orange-600 hover:underline ">Sign In</Link>
               </p>
@@ -118,7 +108,6 @@ export default function  Register (){
           </div>
         </div>
       </div>
-
       <ToastContainer />
     </div>
     </>

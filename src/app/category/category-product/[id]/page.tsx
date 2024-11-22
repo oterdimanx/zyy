@@ -1,19 +1,17 @@
 "use client"
 
-
 import { get_product_by_category_id } from '@/Services/Admin/product'
 import Loading from '@/app/loading'
 import ProductCard from '@/components/ProductCard'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { toast , ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import useSWR from 'swr'
 
 interface pageParam {
     id: string
 }
-
-
 
 type ProductData = {
     productName: string,
@@ -28,14 +26,14 @@ type ProductData = {
     },
     _id : string
 };
-  
 
+export default function Page() {
 
-
-export default function Page({ params, searchParams }: { params: pageParam, searchParams: any }) {
     const [thisProduct , setThisProdData] =  useState<ProductData[] | []>([]);
-    const { data, isLoading } = useSWR('/gettingProductOFSpecificCategoryID', () => get_product_by_category_id(params.id))
-    if (data?.success !== true) toast.error(data?.message)
+    const useParamObject = useParams<{ id: string }>()
+    const  id  = useParamObject.id;
+    const { data, isLoading } = useSWR('/gettingProductOFSpecificCategoryID', () => get_product_by_category_id(id))
+    //if (data?.success !== true) throw new Error (data?.message)
 
     useEffect(() => {
         setThisProdData(data?.data)
@@ -46,7 +44,7 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
     })
 
     return (
-        <div className='w-full h-screen dark:text-black bg-gray-50 py-4 px-2 '>
+        <div className="w-full h-screen dark:text-black bg-gray-50 py-4 px-2">
             <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
                 <ul>
                     <li>
@@ -61,7 +59,7 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
                     </li>
                 </ul>
             </div>
-            <div className='w-full h-5/6  flex items-start justify-center flex-wrap overflow-auto'>
+            <div className="w-full h-5/6 flex items-start justify-center flex-wrap overflow-auto">
                 {
                     isLoading ? <Loading /> : <>
                          {
@@ -80,7 +78,7 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
                     </>
                 }
                 {
-                    isLoading === false && thisProduct ===  undefined || thisProduct?.length <  1 && <p className='text-2xl my-4 text-center font-semibold text-red-400'>No Product Found in this Category</p>
+                    isLoading === false && thisProduct ===  undefined || thisProduct?.length <  1 && <p className="text-2xl my-4 text-center font-semibold text-red-400">No Product Found in this Category</p>
                 }
             </div>
             <ToastContainer />

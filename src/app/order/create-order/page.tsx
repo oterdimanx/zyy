@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TailSpin } from 'react-loader-spinner'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,8 +15,6 @@ import { setCart } from '@/utils/CartSlice'
 import { setNavActive } from '@/utils/AdminNavSlice'
 import { create_a_new_order } from '@/Services/common/order'
 
-
-
 type Inputs = {
     fullName: string,
     address: string,
@@ -25,17 +23,12 @@ type Inputs = {
     country: string,
 }
 
-
-
-
-
 interface userData {
     email: String,
     role: String,
     _id: String,
     name: String
 }
-
 
 type Data = {
     productID: {
@@ -53,10 +46,7 @@ type Data = {
     quantity: number,
 }
 
-
-
 export default function Page() {
-
 
     const [loader, setLoader] = useState(false)
     const Router = useRouter();
@@ -65,22 +55,17 @@ export default function Page() {
     const cartData = useSelector((state: RootState) => state.Cart.cart) as Data[] | null;
     const [loading, setLoading] = useState(true)
 
-
     useEffect(() => {
         if (!Cookies.get('token') || user === null) {
             Router.push('/')
         }
         dispatch(setNavActive('Base'))
     }, [dispatch, Router])
-
+/*
     useEffect(() => {
         toast.warning("This is Dummy Website Don't add your Origial Details Here !")
     }, [])
-
-   
-  
-
-
+*/
 
     useEffect(() => {
         fetchCartData();
@@ -92,19 +77,14 @@ export default function Page() {
         if (cartData?.success) {
             dispatch(setCart(cartData?.data))
         } else {
-            toast.error(cartData?.message)
+            throw new Error(cartData?.message)
         }
         setLoading(false)
     }
 
-
     const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
         criteriaMode: "all"
     });
-
-
-
- 
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
         setLoader(true)
@@ -135,22 +115,19 @@ export default function Page() {
             deliveredAt : new Date(),
         }
 
-
         const res =  await create_a_new_order(finalData);
         if(res?.success){
-            toast.success(res?.message)
+            //toast.success(res?.message)
             
             setTimeout(() => {
                 Router.push('/')
             } , 1000)
             setLoader(false)
         }else{
-            toast.error(res?.message)
+            throw new Error(res?.message);
             setLoader(false)
         }
-
     }
-
 
     function calculateTotalPrice(myCart: Data[]) {
         const totalPrice = myCart?.reduce((acc, item) => {

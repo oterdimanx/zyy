@@ -10,8 +10,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(req: Request) {
   await connectDB();
   try {
-    
-
+  
     const registerCategoryModel = await Category.init();
 
     const getData = await Product.find({}).populate('productCategory', ' categoryName categorySlug _id')

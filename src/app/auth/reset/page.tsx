@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import { forget_password } from '@/Services/auth';
 import { useRouter } from 'next/navigation';
 import React, { useState, FormEvent } from 'react'
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TailSpin } from 'react-loader-spinner';
 
@@ -13,48 +13,49 @@ export default function ForgetPassword() {
 
   const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState({ email: "", password: "", confirmPassword: "" });
-  const [loading, setLoding] = useState(false);
-
-
-
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
     event.preventDefault();
-    setLoding(true);
-
+    setLoading(true);
 
     if (!formData.email) {
+      setLoading(false);
       setError({ ...error, email: "Email Field is Required" })
       return;
     }
     if (!formData.password) {
+      setLoading(false);
       setError({ ...error, password: "Password Field is required" })
       return;
     }
     if (!formData.confirmPassword) {
+      setLoading(false);
       setError({ ...error, confirmPassword: "Confirm Password Field is required" })
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Password and Confirm Password does not match");
+      setLoading(false);
+      setError({ ...error, confirmPassword: "Password and Confirm Password does not match" })
+      return;
     }
 
     const res = await forget_password(formData);
     if (res.success) {
-      setLoding(false);
-      toast.success(res.message);
+      setLoading(false);
+      //toast.success(res.message);
       setTimeout(() => {
         Router.push('/auth/login')
       }, 1000);
     }
     else {
-      setLoding(false);
-      toast.error(res.message);
+      setLoading(false);
+      setError({ ...error, confirmPassword: "Une erreur inconnue est survenue. Veuillez retenter ultérieurement." })
+      {/* exemple d'erreur contenue dans res.message : Email Not Found */}
     }
   }
-
 
   return (
     <>

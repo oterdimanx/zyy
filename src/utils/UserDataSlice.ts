@@ -20,11 +20,9 @@ export const userSlice = createSlice({
     setUserToken : (state, action) => {
         state.userToken = action.payload
     }
-    
   },
 })
 
 // Action creators are generated for each case reducer function
 export const { setUserData  , setUserToken } = userSlice.actions
-
 export const UserReducer =  userSlice.reducer

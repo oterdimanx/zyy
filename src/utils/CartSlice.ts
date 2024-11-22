@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-
 interface Product {
     productName: string;
     productPrice: string;
@@ -25,12 +24,10 @@ interface Data {
     total: number;
 }
 
-
 const initialState: Data = {
     cart: null,
     total: 0,
 }
-
 
 export const cartSlice = createSlice({
     name: 'Cart',
@@ -46,5 +43,4 @@ export const cartSlice = createSlice({
 })
 
 export const { setCart , setTotalPrice } = cartSlice.actions
-
 export const cartReducer = cartSlice.reducer;

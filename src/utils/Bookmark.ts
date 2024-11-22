@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-
 interface Product {
     productName: string;
     productPrice: string;
@@ -24,11 +23,9 @@ interface Data {
     bookmark: [];
 }
 
-
 const initialState: Data = {
     bookmark: [],
 }
-
 
 export const BookmarkSlice = createSlice({
     name: 'Bookmark',
@@ -40,6 +37,5 @@ export const BookmarkSlice = createSlice({
     },
 })
 
-export const {setBookmark } = BookmarkSlice.actions
-
+export const {setBookmark }  = BookmarkSlice.actions
 export const bookmarkReducer = BookmarkSlice.reducer;

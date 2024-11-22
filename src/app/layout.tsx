@@ -8,10 +8,9 @@ const poppin = Poppins({
   subsets: ['latin'],
 })
 
-
 export const metadata = {
-  title: 'Ecommerce Next Zyy-App',
-  description: 'Ecommerce website selling Zyy products',
+  title: 'Zyy App',
+  description: 'Official Zyy products Seller',
   authors: [{ name: "Terdiman Olivier", url: 'https://www.zyysk8club.com' }],
 }
 
@@ -21,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) { 
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className={poppin.className}>
         <Providers>
           {children}

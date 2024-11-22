@@ -1,15 +1,11 @@
 "use Client"
 
 import React, { useEffect, useState } from 'react'
-
 import { useSWRConfig } from "swr"
 import DataTable from 'react-data-table-component';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import { useRouter } from 'next/navigation';
-
-
-
 
 type ProductData = {
   _id: string,
@@ -28,8 +24,6 @@ type ProductData = {
   createdAt: string;
   updatedAt: string;
 };
-
-
 
 interface Order {
   createdAt: string;
@@ -80,8 +74,6 @@ interface Order {
   _id: string;
 }
 
-
-
 export default function OrdersDetailsDataTable() {
   const { mutate } = useSWRConfig()
   const router = useRouter();
@@ -90,7 +82,6 @@ export default function OrdersDetailsDataTable() {
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState<Order[] | []>([]);
 
-
   useEffect(() => {
     setOrderData(data)
   }, [data])
@@ -98,12 +89,6 @@ export default function OrdersDetailsDataTable() {
   useEffect(() => {
     setFilteredData(orderData);
   }, [orderData])
-
-
-
-
-
-
 
   const columns = [
     {
@@ -132,11 +117,6 @@ export default function OrdersDetailsDataTable() {
 
   ];
 
-
-
-
-
-
   useEffect(() => {
     if (search === '') {
       setFilteredData(orderData);
@@ -148,8 +128,6 @@ export default function OrdersDetailsDataTable() {
       }))
     }
   }, [search, orderData])
-
-
 
   return (
     <div className='w-full h-full'>
@@ -174,8 +152,6 @@ export default function OrdersDetailsDataTable() {
         }
         className="bg-white px-4 h-5/6 "
       />
-
     </div>
   )
 }
-
