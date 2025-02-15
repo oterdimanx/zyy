@@ -1,16 +1,3 @@
-#### App is live and running at 
-
-### https://nextjs-ecommerce-typescript.vercel.app/
-
-
- - don't forget to leave a star ! :)
-
-## Authors
-
-- [Abdullah Moiz](https://www.github.com/Abdullah-moiz)
-
-## Features
-
 #### NOTE
  - Admin Dashboard is only accessible to you if you clone it you can't Signup for Admin Account I have added dummy Product and categories 
 

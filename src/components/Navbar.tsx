@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import { RootState } from '@/Store/store';
 import { useSelector } from 'react-redux';
 import { FaCartArrowDown } from 'react-icons/fa';
-import {CiDeliveryTruck} from 'react-icons/ci'
+import { CiDeliveryTruck } from 'react-icons/ci'
 import { MdFavorite } from 'react-icons/md';
 
 export default function Navbar() {

@@ -15,7 +15,7 @@ export default function Hero({setRatio} : IProps) {
     <div className="w-full h-screen relative">
       <Image src={'/palais-4.png'} alt="no Image" fill sizes="100vw" className="w-full h-full object-fill hidden md:block" onLoad={() =>
           setRatio(naturalWidth / naturalHeight)
-        } />
+        } onClick={()=>{console.log('sxpress')}}/>
       <div className="w-full flex-col md:hidden h-full relative flex items-center px-3 justify-center text-center">
         <Image src={'/mob-intro.jpg'} alt="no image" sizes="50vw" fill />
 

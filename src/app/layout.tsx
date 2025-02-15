@@ -1,4 +1,6 @@
-import './globals.css'
+import './styles/globals.css'
+import './styles/learn-more.css'
+import './styles/footer.css'
 import { Poppins } from 'next/font/google'
 import { Providers } from '@/Store/Provider'
 import 'react-toastify/dist/ReactToastify.css';

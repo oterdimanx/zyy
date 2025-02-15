@@ -10,7 +10,7 @@ import { GrFavorite } from 'react-icons/gr'
 import { MdFavorite } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-
+import LearnMore from './LearnMore';
 
 type ProductData = {
     productName: string,
@@ -62,7 +62,7 @@ export default function ProductCard({ productName, productFeatured, productImage
 
 
     return (
-        <div  className="card text-black cursor-pointer card-compact m-3 w-80 bg-white shadow-xl relative">
+        <div className="card text-black cursor-pointer card-compact m-3 w-80 bg-white shadow-xl relative">
             <div onClick={() => router.push(`/product/product-detail/${_id}`)} className='w-full rounded relative h-60'>
                 <Image src={productImage || '/images98.jpg'} alt='no Image' className='rounded' fill sizes='50vw' />
             </div>
@@ -70,9 +70,11 @@ export default function ProductCard({ productName, productFeatured, productImage
             <div className="card-body">
                 <h2 className="card-title" onClick={() => router.push(`/product/product-detail/${_id}`)}>{productName} </h2>
                 <p className='font-semibold' onClick={() => router.push(`/product/product-detail/${_id}`)}>{`Rs ${productPrice}`}</p>
+
                 <div className="card-actions justify-end z-20">
-                    <button onClick={AddToCart} className="btn  btn-circle btn-ghost "><BsCartPlus className='text-2xl text-orange-600 font-semibold' /></button>
-                    <button onClick={AddToBookmark} className="btn btn-circle btn-ghost absolute top-0 right-0 "><MdFavorite className='text-2xl text-orange-600 font-semibold' /></button>
+                    <LearnMore productLink={_id} />
+                    <button onClick={AddToCart} className="btn btn-circle btn-ghost "><BsCartPlus className="text-2xl text-orange-600 font-semibold" /></button>
+                    <button onClick={AddToBookmark} className="btn btn-circle btn-ghost absolute top-0 right-0"><MdFavorite className="text-2xl text-orange-600 font-semibold" /></button>
                 </div>
             </div>
         </div>

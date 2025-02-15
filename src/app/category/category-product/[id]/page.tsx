@@ -8,6 +8,7 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import useSWR from 'swr'
+import Footer from '@/components/Footer'
 
 interface pageParam {
     id: string
@@ -81,7 +82,9 @@ export default function Page() {
                     isLoading === false && thisProduct ===  undefined || thisProduct?.length <  1 && <p className="text-2xl my-4 text-center font-semibold text-red-400">No Product Found in this Category</p>
                 }
             </div>
-            <ToastContainer />
+
+            <Footer />
         </div>
+
     )
 }
