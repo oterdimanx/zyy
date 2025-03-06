@@ -34,3 +34,12 @@ next-env.d.ts
 
 #netlify
 .netlify
+
+#firebase
+.firebase
+.firebaserc
+firebase.json
+storage.rules
+
+#github
+.github*
