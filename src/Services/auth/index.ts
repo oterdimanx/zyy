@@ -37,7 +37,7 @@ export const login_me = async (formData : any) => {
 
 export const forget_password = async (formData : any) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/forgetPassword`, {
+        const res = await fetch(`/api/auth/forgetPassword`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
