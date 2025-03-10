@@ -12,12 +12,9 @@ const nextConfig = {
           protocol: 'https',
           hostname: 'firebasestorage.googleapis.com',
           port: '',
-          pathname: '/v0/b/zyysk8club-62059.appspot.com/o/',
+          pathname: process.env.FBS_PATHNAME,
         },
       ],
-  },
-  env: {
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://zyysk8club.web.app"
   },
 }
 

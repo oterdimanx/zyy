@@ -52,7 +52,7 @@ export default function Dashboard() {
   }, [categoryData, dispatch, categoryLoading, productData, productLoading , orderData , orderLoading])
 
   return (
-    <div className="w-full h-screen flex  bg-gray-50 overflow-hidden">
+    <div className="w-full h-screen flex bg-gray-50 overflow-hidden">
       <AdminSidebar />
       <div className="w-full h-full">
         <AdminNavbar />
@@ -64,6 +64,4 @@ export default function Dashboard() {
     </div>
   )
 }
-
-
 

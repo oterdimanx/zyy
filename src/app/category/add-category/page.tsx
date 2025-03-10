@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
-import { storage } from '@/utils/Firebase'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '@/utils/Firebase'
 import { ToastContainer } from 'react-toastify';
 import { TailSpin } from 'react-loader-spinner';
 import { useRouter } from 'next/navigation';
@@ -29,7 +29,8 @@ const uploadImages = async (file: File) => {
         const randomString = Math.random().toString(36).substring(2, 8);
         return `${file?.name}-${timestamp}-${randomString}`;
     }
-
+    //console.log(process.env.FBS_PROJECT_ID);
+    //return;
     const fileName = createFileName();
     const storageRef = ref(storage, `categories/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -191,4 +192,3 @@ export default function AddCategory() {
         </div >
     )
 }
-
