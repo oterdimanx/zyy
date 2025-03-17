@@ -41,6 +41,7 @@ export default function Navbar() {
                         <li><Link href={"/order/view-orders"}>My Orders</Link></li>
                         <li><Link href={"/Dashboard"}>Dashboard</Link></li>
                         <li><Link href={"/Lookbook"}>Lookbook</Link></li>
+                        <li><Link href={"/Archive"}>Archive</Link></li>
                     </ul>
                 </div>
             </div>

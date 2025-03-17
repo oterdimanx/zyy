@@ -7,6 +7,8 @@ interface NavState {
     product : any[],
     Order : any[],
     orderLoading : boolean,
+    lookbook : any[],
+    lookbookLoading : boolean,
 }
 
 const initialState : NavState = {
@@ -16,6 +18,8 @@ const initialState : NavState = {
     product : [],
     Order : [],
     orderLoading : false,
+    lookbook : [],
+    lookbookLoading : false,
 }
 
 export const Admin = createSlice({
@@ -39,12 +43,17 @@ export const Admin = createSlice({
     },
     setOrderLoading : (state , action) => {
       state.orderLoading = action.payload
-    }
-
+    },
+    setLookbookData : (state , action) => {
+      state.lookbook = action.payload
+    },
+    setLookbookLoading : (state , action) => {
+      state.lookbookLoading = action.payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setCategoryData ,setCatLoading , setProdLoading  , setProductData , setOrderData , setOrderLoading} = Admin.actions
+export const { setCategoryData ,setCatLoading , setProdLoading  , setProductData , setOrderData , setOrderLoading , setLookbookData , setLookbookLoading } = Admin.actions
 
 export const AdminReducer =  Admin.reducer

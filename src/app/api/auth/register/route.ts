@@ -14,9 +14,6 @@ const schema = Joi.object({
 
 export  async function POST (req : Request)  {
     await connectDB();
-
-    
-
     const { email, password, name } = await req.json();
     const { error } = schema.validate({ email, password, name });
 
@@ -28,7 +25,6 @@ export  async function POST (req : Request)  {
         if (ifExist) {
             return NextResponse.json({ success: false, message: "User Already Exist" });
         }
-
         else {
             const hashedPassword = await hash(password, 12)
             const createUser = await User.create({ email, name, password: hashedPassword , role : 'user' });

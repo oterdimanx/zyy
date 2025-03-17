@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import User from './User';
-import Product from "./Product";
 
 const BookmarkSchema = new mongoose.Schema({
     userID: {

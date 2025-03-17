@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 const UserSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -10,7 +9,7 @@ const UserSchema = new mongoose.Schema({
         default: 'user',
         enum: ['user', 'admin']
     }
-});
+},{timestamps : true});
 
 const User = mongoose.models.User  || mongoose.model('User', UserSchema);
 

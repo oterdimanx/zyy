@@ -44,7 +44,7 @@ More Functionality will be added with time
 
 
 ## Tech
-- Nextjs 13
+- Nextjs 15
 - Typescript
 - tailwind css
 - Redux toolkit

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
         if (isAuthenticated) {
             const data = await req.json();
-            console.log(data)
+            //console.log(data)
             
 
             const { user } = data;

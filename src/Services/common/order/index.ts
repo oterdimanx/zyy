@@ -44,7 +44,7 @@ export const get_order_details= async (id: any) => {
         'Authorization': `Bearer ${Cookies.get('token')}`
       }
     });
-    console.log(res)
+    //console.log(res)
     const data = await res.json();
 
     return data;

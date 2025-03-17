@@ -1,7 +1,8 @@
+
 import connectDB from "@/DB/connectDB";
 import AuthCheck from "@/middleware/AuthCheck";
 import { NextResponse } from "next/server";
-import Category from "@/model/Category";
+import Lookbook from "@/model/Lookbook";
 
 export async function PUT(req: Request) {
   try {
@@ -9,17 +10,17 @@ export async function PUT(req: Request) {
     const isAuthenticated = await AuthCheck(req);
 
     if (isAuthenticated === 'admin') {
-      const data = await req.json();
-      const  {_id, name, description, image, slug, sizes} = data
 
-      const saveData = await Category.findOneAndUpdate({_id: _id}, {categoryName : name, categoryDescription : description, categoryImage: image, categorySlug: slug, categorySizes: sizes}  , { new: true });
-      //const saveData = false;
+      const data = await req.json();
+      const  {_id, lookbookName, lookbookImageUrls} = data
+      const saveData = await Lookbook.findOneAndUpdate({_id: _id}, {lookbookName : lookbookName, lookbookImageUrls : lookbookImageUrls}  , { new: true });
+
       if (saveData) {
         //console.log(saveData)
-        return NextResponse.json({ success: true, message: "Category updated successfully!" });
+        return NextResponse.json({ success: true, message: "Lookbook updated successfully!" });
       } else {
         //console.log('error')
-        return NextResponse.json({ success: false, message: "Failed to update the category. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to update the lookbook. Please try again!" });
       }
 
     } else {
@@ -28,7 +29,7 @@ export async function PUT(req: Request) {
 
   } catch (error) {
 
-    console.log('Error in update a new category:', error);
+    console.log('Error in update a new lookbook:', error);
     return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
 
   }
