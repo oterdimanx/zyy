@@ -62,6 +62,11 @@ export default function LookbookDataTable() {
       pendingDeleteLookbook.lbookId = id;
       setCount(i)
       setLookbookList(pendingDeleteLookbook);
+    }else if('' != lookbookList.lbookId) {
+      i++
+      pendingDeleteLookbook.count = i;
+      setCount(i)
+      setLookbookList(pendingDeleteLookbook);
     }
   }
 
@@ -141,6 +146,7 @@ export default function LookbookDataTable() {
     })
 
     const res = await delete_a_lookbook(id);
+  
     if (res?.success) {
       mutate('/gettingAllLookbooksFOrAdmin')
     }

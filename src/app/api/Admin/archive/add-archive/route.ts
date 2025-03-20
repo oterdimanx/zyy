@@ -7,12 +7,12 @@ import Joi from "joi";
 
 const AddArchiveSchema  = Joi.object({
   archiveName  : Joi.string().required(),
-  archiveImgUrls  : Joi.string().required(),
+  archiveImgUrls  : Joi.string(),
   archiveType  : Joi.string().required(),
   archiveDescription  : Joi.string().required(),
   archiveImage  : Joi.string().required(),
   archiveSlug  : Joi.string().required(),
-  /*archiveDate  : Joi.date().required(),*/
+  archiveDate  : Joi.date(),
 })
 
 
@@ -29,9 +29,9 @@ export async function POST(req: Request) {
 
       const data = await req.json();
       
-      const {archiveName , archiveImgUrls , archiveType , archiveDescription, archiveImage, archiveSlug } =  data;
+      const {archiveName , archiveImgUrls , archiveType , archiveDescription, archiveImage, archiveSlug, archiveDate } =  data;
       
-      const { error } = AddArchiveSchema.validate({archiveName , archiveImgUrls , archiveType , archiveDescription, archiveImage, archiveSlug});
+      const { error } = AddArchiveSchema.validate({archiveName , archiveImgUrls , archiveType , archiveDescription, archiveImage, archiveSlug, archiveDate});
 
       if (error) return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
 

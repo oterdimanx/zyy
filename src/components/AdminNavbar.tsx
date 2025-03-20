@@ -31,9 +31,11 @@ export default function AdminNavbar() {
                         <li onClick={() => dispatch(setNavActive('activeCategories'))}><button>Categories</button></li>
                         <li onClick={() => dispatch(setNavActive('activeProducts'))}><button>Products</button></li>
                         <li onClick={() => dispatch(setNavActive('activeLookbook'))}><button>Lookbook</button></li>
+                        <li onClick={() => dispatch(setNavActive('activeArchive'))}><button>Archives</button></li>
                         <li><Link href={"/product/add-product"}>Add Products</Link></li>
                         <li><Link href={"/category/add-category"}>Add Category</Link></li>
                         <li><Link href={"/lookbook/add-lookbook"}>Add Lookbook</Link></li>
+                        <li><Link href={"/archive/add-archive"}>Add Archive</Link></li>
                         <li onClick={() => dispatch(setNavActive('activePendingOrder'))}><button>Pending orders</button></li>
                         <li onClick={() => dispatch(setNavActive('activeDeliveredOrder'))}><button>Completed orders</button></li>
                     </ul>

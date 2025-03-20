@@ -7,6 +7,7 @@ import CategoryDataTable from './CategoryDataTable';
 import PendingOrdersDataTable from './PendingOrdersDataTable';
 import CompletedOrderDataTable from './CompletedOrderDataTable';
 import LookbookDataTable from './LookbookDataTable';
+import ArchiveDataTable from './ArchiveDataTable';
 
 export default function SuperComponent() {
     const navActive = useSelector((state: RootState) => state.AdminNav.ActiveNav)
@@ -23,6 +24,8 @@ export default function SuperComponent() {
             return <CompletedOrderDataTable/>
         case 'activeLookbook':
             return <LookbookDataTable/>
+        case 'activeArchive':
+            return <ArchiveDataTable/>
         default:
             return <TileContainer />;
     }

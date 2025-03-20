@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ToastContainer } from 'react-toastify';
 import { TailSpin } from 'react-loader-spinner';
-import { get_category_by_id, update_a_category, delete_an_image } from '@/Services/Admin/category';
+import { get_archive_by_id, update_an_archive, delete_an_image } from '@/Services/Admin/archive';
 import { useRouter, useParams } from 'next/navigation';
 import useSWR from 'swr'
 import Image from 'next/image';
@@ -21,16 +21,16 @@ type Inputs = {
     description: string,
     slug: string,
     image: any,
-    sizes: string,
+    type: string,
 }
 
-type CategoryData = {
+type ArchiveData = {
     _id: string;
-    categoryName: string;
-    categoryDescription: string;
-    categoryImage: Array<File>;
-    categorySlug: string;
-    categorySizes: string;
+    archiveName: string;
+    archiveDescription: string;
+    archiveImage: Array<File>;
+    archiveSlug: string;
+    archiveType: string;
     createdAt: string;
     updatedAt: string;
 };
@@ -44,9 +44,9 @@ interface userData {
     role: String,
     _id: String,
     name: String
-  }
+}
 
-  const uploadImages = async (file: File) => {
+const uploadImages = async (file: File) => {
     const createFileName = () => {
         const timestamp = Date.now();
         const randomString = Math.random().toString(36).substring(2, 8);
@@ -54,7 +54,7 @@ interface userData {
     }
 
     const fileName = createFileName();
-    const storageRef = ref(storage, `categories/${fileName}`);
+    const storageRef = ref(storage, `archives/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     return new Promise((resolve, reject) => {
@@ -81,9 +81,10 @@ const maxSize = (value: File) => {
 export default function Page() {
 
     const [loader, setLoader] = useState(false)
+    const [badServerResponse, setBadServerResponse] = useState(false)
     const Router = useRouter();
     const dispatch = useDispatch();
-    const [catData, setCatData] = useState<CategoryData | undefined>(undefined);
+    const [arcData, setArcData] = useState<ArchiveData | undefined>(undefined);
     const useParamObject = useParams<{ id: string }>()
     const id = useParamObject.id;
 
@@ -95,14 +96,14 @@ export default function Page() {
         dispatch(setNavActive('Base'))
     }, [dispatch, Cookies, Router])
 
-    const { data, isLoading } = useSWR('/gettingAllCategoriesFOrAdmin', () => get_category_by_id(id))
+    const { data, isLoading } = useSWR('/gettingAllArchivesFOrAdmin', () => get_archive_by_id(id))
     if (data?.success !== true) throw (data?.message)
 
     useEffect(() => {
-        setCatData(data?.data)
+        setArcData(data?.data)
     }, [data])
 
-    const [selected, setSelected] = useState(catData?.categorySizes);
+    const [selected, setSelected] = useState(arcData?.archiveType);
     const onCategorySizesSelect = (event: any, setSelected: /*unresolved*/any) => {
         const options = [...event.target.selectedOptions]
         const values = options.map( option => option.value )
@@ -115,20 +116,20 @@ export default function Page() {
 
     const setValueofFormData = useCallback(
         () => {
-            setValue('name', catData?.categoryName ?? '')
-            setValue('description', catData?.categoryDescription ?? '')
-            setValue('image', catData?.categoryImage ? (catData?.categoryImage[0]?.name ?? '') : '')
-            setValue('slug', catData?.categorySlug ?? '')
-            setValue('sizes', catData?.categorySizes ?? '')
+            setValue('name', arcData?.archiveName ?? '')
+            setValue('description', arcData?.archiveDescription ?? '')
+            setValue('image', arcData?.archiveImage ? (arcData?.archiveImage[0]?.name ?? '') : '')
+            setValue('slug', arcData?.archiveSlug ?? '')
+            setValue('type', arcData?.archiveType ?? '')
         },
-        [catData]
+        [arcData]
     );
 
     useEffect(() => {
-        if (catData) {
+        if (arcData) {
             setValueofFormData();
         }
-    }, [catData]);
+    }, [arcData]);
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
         setLoader(false)
@@ -139,20 +140,20 @@ export default function Page() {
 
         const updatedData: Inputs = {
             _id: id,
-            name: data.name !== catData?.categoryName ? data.name : catData?.categoryName,
-            description: data.description !== catData?.categoryDescription ? data.description : catData?.categoryDescription,
-            slug: data.slug !== catData?.categorySlug ? data.slug : catData?.categorySlug,
-            sizes: data.sizes !== catData?.categorySizes ? data.sizes.toString() : catData?.categorySizes.toString(),
+            name: data.name !== arcData?.archiveName ? data.name : arcData?.archiveName,
+            description: data.description !== arcData?.archiveDescription ? data.description : arcData?.archiveDescription,
+            slug: data.slug !== arcData?.archiveSlug ? data.slug : arcData?.archiveSlug,
+            type: data.type !== arcData?.archiveType ? data.type.toString() : arcData?.archiveType.toString(),
             image: uploadImageToFirebase,
         };
 
-        const mainImageFilename = catData?.categoryImage.toString() ?? '';
-        const imgRes = (catData?.categoryImage != undefined) ? await delete_an_image(mainImageFilename) : false;
-        const res = await update_a_category(updatedData)
+        const mainImageFilename = arcData?.archiveImage.toString() ?? '';
+        const imgRes = (arcData?.archiveImage != undefined) ? await delete_an_image(mainImageFilename) : false;
+        const res = await update_an_archive(updatedData)
 
         if (res?.success && imgRes) {
             //toast.success(res?.message);
-            //console.log(catData?.categoryImage[0]?.name)
+            setBadServerResponse(false)
             dispatch(setNavActive('Base'))
             setTimeout(() => {
                 Router.push("/Dashboard")
@@ -160,6 +161,7 @@ export default function Page() {
             setLoader(false)
         } else {
             //toast.error(res?.message)
+            setBadServerResponse(true)
             setLoader(false)
         }
     }
@@ -176,12 +178,12 @@ export default function Page() {
                     </li>
                     <li>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        Update Category
+                        Update Archive
                     </li>
                 </ul>
             </div>
             <div className="w-full h-20 my-2 text-center">
-                <h1 className="text-2xl py-2">Update Category</h1>
+                <h1 className="text-2xl py-2">Update Archive</h1>
             </div>
             {
                 isLoading || loader ? (
@@ -196,7 +198,7 @@ export default function Page() {
                             wrapperClass=""
                             visible={true}
                         />
-                        <p className="text-sm mt-2 font-semibold text-orange-500">updating Category Hold Tight ....</p>
+                        <p className="text-sm mt-2 font-semibold text-orange-500">updating Archive Hold Tight ....</p>
                     </div>
                 ) : (
 
@@ -204,14 +206,14 @@ export default function Page() {
                         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg py-2 flex-col">
                             <div className="form-control w-full mb-2">
                                 <label className="label">
-                                    <span className="label-text">Category Name</span>
+                                    <span className="label-text">Archive Name</span>
                                 </label >
                                 <input    {...register("name")} type="text" placeholder="Type here" className="input input-bordered w-full" />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
-                                    <span className="label-text">Category Slug</span>
+                                    <span className="label-text">Archive Slug</span>
                                 </label>
                                 <input  {...register("slug")} type="text" placeholder="Type here" className="input input-bordered w-full" />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
@@ -219,7 +221,7 @@ export default function Page() {
                             </div>
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Category Description</span>
+                                    <span className="label-text">Archive Description</span>
                                 </label>
                                 <textarea  {...register("description")} className="textarea textarea-bordered h-24" placeholder="Description"></textarea>
                                 {errors.description && <span className="text-red-500 text-xs mt-2">This field is required</span>}
@@ -228,27 +230,35 @@ export default function Page() {
 
                             <div className="form-control w-full max-w-full">
                                 <label className="label">
-                                    <span className="label-text">Choose Sizes</span>
+                                    <span className="label-text">Type d'archive</span>
                                 </label>
-                                <select multiple={true} {...register("sizes", { required: true })} className="select select-bordered" value={selected} onChange={(e) => onCategorySizesSelect(e,setSelected,)}>
-                                    <option disabled>Pick sizes</option>
-                                    <option key="unique" value="unique">"unique"</option>
-                                    <option key="s" value="s">"s"</option>
-                                    <option key="m" value="m">"m"</option>
-                                    <option key="l" value="l">"l"</option>
-                                    <option key="xl" value="xl">"xl"</option>
+                                <select multiple={true} {...register("type", { required: true })} className="select select-bordered" value={selected} onChange={(e) => onCategorySizesSelect(e,setSelected,)}>
+                                    <option key="disabled" disabled>Choisir un type</option>
+                                    <option key="event" value="event">"Evènement"</option>
+                                    <option key="event2" value="event2">"autre"</option>
                                 </select>
+                                {errors.type && <span className="text-red-500 text-xs mt-2">Ce champ est requis: merci de sélectionner un type d'archive.</span>}
                             </div>
                             {
-                                catData  && catData?.categoryImage != undefined && (
+                                arcData && arcData?.archiveImage != undefined && (
 
                                     <div className="form-control">
                                         <label className="label">
                                             <span className="label-text">Old Image</span>
                                         </label>
-                                        <Image src={catData?.categoryImage.toString() || '/pants.png'} alt='No Image Found' width={200} height={200} style={{ width: '200', height: '200' }} />
+                                        <Image src={arcData?.archiveImage.toString() || '/pants.png'} alt='No Image Found' width={200} height={200} style={{ width: '200', height: '200' }} />
                                         <input accept="image/*" max="1000000"  {...register("image", { required: true })} type="file" className="file-input file-input-bordered w-full" />
                                         {errors.image && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
+                                    </div>
+                                )
+                            }
+                            {
+                                badServerResponse && (
+                                    <div className="form-control">
+                                        <span className="text-red-500 text-lg mt-2">
+                                            Une erreur innatendue est survenue. 
+                                            Merci de tenter de vous reconnecter pour procéder.
+                                        </span>
                                     </div>
                                 )
                             }

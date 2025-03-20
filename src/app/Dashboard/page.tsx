@@ -8,13 +8,14 @@ import SuperComponent from '@/components/SuperComponent';
 import { ToastContainer } from 'react-toastify';
 import useSWR from 'swr'
 import { useDispatch } from 'react-redux';
-import { setCatLoading, setCategoryData, setOrderData, setProdLoading, setProductData, setLookbookLoading, setLookbookData } from '@/utils/AdminSlice';
+import { setCatLoading, setCategoryData, setOrderData, setProdLoading, setProductData, setLookbookLoading, setLookbookData, setArchiveLoading, setArchiveData } from '@/utils/AdminSlice';
 import Loading from '../loading';
 import { setNavActive } from '@/utils/AdminNavSlice';
 import { get_all_products } from '@/Services/Admin/product';
 import { get_all_orders } from '@/Services/Admin/order';
 import { get_all_categories } from '@/Services/Admin/category';
 import { get_all_lookbooks } from '@/Services/Admin/lookbook';
+import { get_all_archives } from '@/Services/Admin/archive';
 
 interface userData {
   email: String,
@@ -42,6 +43,7 @@ export default function Dashboard() {
   const {data : orderData, isLoading : orderLoading} = useSWR('/gettingAllOrdersForAdmin', get_all_orders)
   //if (orderData?.success !== true) throw new Error (orderData?.message)
   const { data: lookbookData, isLoading: lookbookLoading } = useSWR('/gettingAllLookbooksFOrAdmin', get_all_lookbooks)
+  const { data: archiveData, isLoading: archiveLoading } = useSWR('/gettingAllArchivesFOrAdmin', get_all_archives)
 
   console.log(lookbookData?.data)
   useEffect(() => {
@@ -53,7 +55,9 @@ export default function Dashboard() {
     dispatch(setCatLoading(orderLoading))
     dispatch(setLookbookData(lookbookData?.data))
     dispatch(setLookbookLoading(lookbookLoading))
-  }, [categoryData, dispatch, categoryLoading, productData, productLoading , orderData , orderLoading])
+    dispatch(setArchiveData(archiveData?.data))
+    dispatch(setArchiveLoading(archiveLoading))
+  }, [categoryData, dispatch, categoryLoading, productData, productLoading , orderData , orderLoading, lookbookData, lookbookLoading, archiveData, archiveLoading ])
 
   return (
     <div className="w-full h-screen flex bg-gray-50 overflow-hidden">
@@ -61,7 +65,7 @@ export default function Dashboard() {
       <div className="w-full h-full">
         <AdminNavbar />
         <div className="w-full h-5/6 flex flex-wrap items-start justify-center overflow-y-auto  px-4 py-2">
-          {categoryLoading || productLoading || lookbookLoading ? <Loading /> : <SuperComponent />}
+          {categoryLoading || productLoading || lookbookLoading || archiveLoading ? <Loading /> : <SuperComponent />}
         </div>
       </div>
       <ToastContainer />

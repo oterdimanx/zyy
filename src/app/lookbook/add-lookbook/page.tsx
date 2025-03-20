@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import React, { MouseEventHandler, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/utils/Firebase'
@@ -12,15 +12,11 @@ import { add_new_lookbook, delete_a_lookbook, archive_a_lookbook } from '@/Servi
 import Cookies from 'js-cookie';
 import '../../styles/admin-lookbook.css'
 import { get_all_lookbooks } from '@/Services/Admin/lookbook';
-import { mutate } from 'swr';
+import { useSWRConfig } from "swr"
 
 type Inputs = {
     name: string,
     image: Array<File>,
-}
-
-interface loaderType {
-    loader: Boolean
 }
 
 const uploadImages = async (file: File, randString : string) => {
@@ -61,13 +57,13 @@ export default function AddLookbook() {
 
     const [loader, setLoader] = useState(false)
     const [imgsSrc, setImgsSrc] = useState<any>([])
-    const [imgbck, setImgbck] = useState<any>([])
     const Router = useRouter();
     const [countLookbooks, SetCountLookbooks] = useState(0)
     const [archive, SetArchive] = useState(false)
     const [lookbookId, SetLookbookId] = useState('')
     const [lbData, SetLbData] = useState<any>([])
-    
+    const { mutate } = useSWRConfig()
+    const [badServerResponse, setBadServerResponse] = useState(false)
     
     useEffect(() => {
         FetchDataOFLookbook()
@@ -90,7 +86,7 @@ export default function AddLookbook() {
         
     }, [Router])
 
-    const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
+    const { register, resetField, formState: { errors }, handleSubmit } = useForm<Inputs>({
         criteriaMode: "all"
     });
 
@@ -107,13 +103,15 @@ export default function AddLookbook() {
       }
     }
 
-    const onImgRemove = (url: any, e: any) => {
+    const onImgRemove = (e: any) => {
         setImgsSrc([])
+        resetField('image')
         e.target.value = null
     }
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
 
+      
       var fileNames = '';
       setLoader(true)
 
@@ -162,12 +160,16 @@ export default function AddLookbook() {
       const res = await add_new_lookbook(finalData)
 
       if (res.success) {
-        mutate('/gettingAllCategoriesFOrAdmin')
+        mutate('/gettingAllLookbooksFOrAdmin')
+        setBadServerResponse(false)
         setTimeout(() => {
             Router.push('/Dashboard')
         }, 2000);
         setLoader(false)
       } else {
+        console.log(imgsSrc)
+        setBadServerResponse(true)
+        setImgsSrc([])
         setLoader(false)
         throw new Error (res?.message)
       }
@@ -238,12 +240,23 @@ export default function AddLookbook() {
                                 {imgsSrc && imgsSrc.map((link : any, ky = 0) => (
                                     <div className="overlayContainer" key={ky++}>
                                         <div className="overlay" key={ky++}>
-                                            <img src={link} onClick={(e)=>{document.forms[0].reset();onImgRemove(link,e)}} className="overlay" key={ky+++1} />
-                                            <div className="close nw_red" onClick={(e)=>{document.forms[0].reset();onImgRemove(link,e)}} key={ky+++2}></div>
+                                            <img src={link} onClick={(e)=>{onImgRemove(e)}} className="overlay" key={ky+++1} />
+                                            <div className="close nw_red" onClick={(e)=>{onImgRemove(e)}} key={ky+++2}></div>
                                         </div>
                                     </div>
                                   ))}
                             </div>
+
+                            {
+                                badServerResponse && (
+                                    <div className="form-control">
+                                        <span className="text-red-500 text-lg mt-2">
+                                            Une erreur innatendue est survenue. 
+                                            Merci de tenter de vous reconnecter pour procéder.
+                                        </span>
+                                    </div>
+                                )
+                            }
 
                             <button className="btn btn-block mt-3">Done !</button>
 
