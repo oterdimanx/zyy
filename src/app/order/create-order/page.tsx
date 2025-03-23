@@ -61,11 +61,6 @@ export default function Page() {
         }
         dispatch(setNavActive('Base'))
     }, [dispatch, Router])
-/*
-    useEffect(() => {
-        toast.warning("This is Dummy Website Don't add your Origial Details Here !")
-    }, [])
-*/
 
     useEffect(() => {
         fetchCartData();
@@ -73,6 +68,11 @@ export default function Page() {
 
     const fetchCartData = async () => {
         if (!user?._id) return Router.push('/')
+        if (undefined === Cookies.get('token')) {
+            Cookies.remove('token');
+            localStorage.clear();
+            return Router.push('/auth/login?token=expired')
+        }
         const cartData = await get_all_cart_Items(user?._id)
         if (cartData?.success) {
             dispatch(setCart(cartData?.data))

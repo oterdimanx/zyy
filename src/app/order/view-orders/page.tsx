@@ -18,6 +18,11 @@ interface userData {
   name: String
 }
 
+const handleLogout = () => {
+  Cookies.remove('token');
+  localStorage.clear();
+}
+
 export default function Page() {
   const Router = useRouter();
   const dispatch = useDispatch();
@@ -26,7 +31,8 @@ export default function Page() {
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
     if (!Cookies.get('token') || !user) {
-      Router.push('/')
+      handleLogout()
+      Router.push('/auth/login?token=expired')
     }
   }, [Router])
 
@@ -36,11 +42,12 @@ export default function Page() {
 
   const fetchOrdersData = async () => {
     if (!user?._id) return Router.push('/')
+    if (undefined === Cookies.get('token')) return Router.push('/auth/login?token=expired')
     const orderData = await get_all_orders_of_user(user?._id)
     if (orderData?.success) {
       dispatch(setOrder(orderData?.data))
     } else {
-      toast.error(orderData?.message)
+      throw new Error(orderData?.message)
     }
   }
 

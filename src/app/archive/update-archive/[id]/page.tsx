@@ -35,10 +35,6 @@ type ArchiveData = {
     updatedAt: string;
 };
 
-interface pageParam {
-    id: string
-}
-
 interface userData {
     email: String,
     role: String,
@@ -134,9 +130,12 @@ export default function Page() {
     const onSubmit: SubmitHandler<Inputs> = async data => {
         setLoader(false)
 
-        const CheckFileSize = maxSize(data.image[0]);
-        if (CheckFileSize) throw new Error ('Image size must be less then 1MB')
-        const uploadImageToFirebase = await uploadImages(data.image[0]);
+        if(undefined != data.image[0]){
+            const CheckFileSize = maxSize(data.image[0]);
+            if (CheckFileSize) throw new Error ('Image size must be less then 1MB')
+        }
+
+        const uploadImageToFirebase = (undefined != data.image[0]) ? await uploadImages(data.image[0]) : arcData?.archiveImage;
 
         const updatedData: Inputs = {
             _id: id,
@@ -148,11 +147,11 @@ export default function Page() {
         };
 
         const mainImageFilename = arcData?.archiveImage.toString() ?? '';
-        const imgRes = (arcData?.archiveImage != undefined) ? await delete_an_image(mainImageFilename) : false;
+        const imgRes = 'object' === typeof(data.image[0]) && arcData?.archiveImage != undefined ? await delete_an_image(mainImageFilename) : true
+
         const res = await update_an_archive(updatedData)
 
         if (res?.success && imgRes) {
-            //toast.success(res?.message);
             setBadServerResponse(false)
             dispatch(setNavActive('Base'))
             setTimeout(() => {
@@ -160,7 +159,6 @@ export default function Page() {
             }, 2000);
             setLoader(false)
         } else {
-            //toast.error(res?.message)
             setBadServerResponse(true)
             setLoader(false)
         }
@@ -235,19 +233,19 @@ export default function Page() {
                                 <select multiple={true} {...register("type", { required: true })} className="select select-bordered" value={selected} onChange={(e) => onCategorySizesSelect(e,setSelected,)}>
                                     <option key="disabled" disabled>Choisir un type</option>
                                     <option key="event" value="event">"Evènement"</option>
-                                    <option key="event2" value="event2">"autre"</option>
+                                    <option key="lookbook" value="lookbook">"Lookbook"</option>
                                 </select>
                                 {errors.type && <span className="text-red-500 text-xs mt-2">Ce champ est requis: merci de sélectionner un type d'archive.</span>}
                             </div>
                             {
-                                arcData && arcData?.archiveImage != undefined && (
+                                arcData && arcData?.archiveType == 'event' && arcData?.archiveImage != undefined && (
 
                                     <div className="form-control">
                                         <label className="label">
-                                            <span className="label-text">Old Image</span>
+                                            <span className="label-text">Modifier l'image</span>
                                         </label>
                                         <Image src={arcData?.archiveImage.toString() || '/pants.png'} alt='No Image Found' width={200} height={200} style={{ width: '200', height: '200' }} />
-                                        <input accept="image/*" max="1000000"  {...register("image", { required: true })} type="file" className="file-input file-input-bordered w-full" />
+                                        <input accept="image/*" max="1000000"  {...register("image", { required: false })} type="file" className="file-input file-input-bordered w-full" />
                                         {errors.image && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
                                     </div>
                                 )

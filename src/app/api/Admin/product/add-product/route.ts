@@ -9,6 +9,8 @@ const AddProductSchema  = Joi.object({
   productName  : Joi.string().required(),
   productDescription  : Joi.string().required(),
   productImage  : Joi.string().required(),
+  productImage2  : Joi.string().required(),
+  productImage3  : Joi.string().required(),
   productQuantity  : Joi.number().required(),
   productSlug  : Joi.string().required(),
   productPrice  : Joi.number().required(),
@@ -30,9 +32,9 @@ export async function POST(req: Request) {
       
       const data = await req.json();
 
-      const {productCategory , productDescription , productFeatured , productImage ,productName  , productPrice , productQuantity , productSlug  } = data;
+      const {productCategory , productDescription , productFeatured , productImage , productImage2 , productImage3 , productName , productPrice , productQuantity , productSlug  } = data;
 
-      const { error } = AddProductSchema.validate( {productCategory , productDescription , productFeatured , productImage ,productName  , productPrice , productQuantity , productSlug  });
+      const { error } = AddProductSchema.validate( {productCategory , productDescription , productFeatured , productImage , productImage2, productImage3, productName  , productPrice , productQuantity , productSlug  });
 
       if (error) return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
 

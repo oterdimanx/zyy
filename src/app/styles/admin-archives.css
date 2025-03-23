@@ -1,6 +1,11 @@
 .rdt_TableCell img.archiveImage {
-    visibility: hidden;
-  }
-  .rdt_TableCell img.archiveImage:first-child {
-    visibility: visible;
-  }
+  visibility: hidden;
+}
+.rdt_TableCell img.archiveImage:first-child {
+  visibility: visible;
+}
+
+.datepicker {
+  width: 100%;
+}
+

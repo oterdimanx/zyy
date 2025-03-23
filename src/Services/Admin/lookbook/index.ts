@@ -83,3 +83,32 @@ export const archive_a_lookbook = async (formData : any) => {
   }
 
 }
+
+export const get_lookbook_by_id = async (id:string) => {
+  try {
+    const res = await fetch(`/api/common/lookbook/get-lookbook-by-id?id=${id}`, {
+      method: 'GET',
+    })
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log('Error in getting Lookbook by ID (service) =>', error)
+  }
+}
+
+export const delete_an_image = async (id:string) => {
+  try {
+    const res = await fetch(`/api/Admin/image/delete-image?id=${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${Cookies.get('token')}`
+      },
+    })
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log('Error in deleting Image (lookbook service) =>', error)
+  }
+}

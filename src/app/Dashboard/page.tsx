@@ -45,7 +45,6 @@ export default function Dashboard() {
   const { data: lookbookData, isLoading: lookbookLoading } = useSWR('/gettingAllLookbooksFOrAdmin', get_all_lookbooks)
   const { data: archiveData, isLoading: archiveLoading } = useSWR('/gettingAllArchivesFOrAdmin', get_all_archives)
 
-  console.log(lookbookData?.data)
   useEffect(() => {
     dispatch(setCategoryData(categoryData?.data))
     dispatch(setCatLoading(categoryLoading))

@@ -11,16 +11,13 @@ const createOrderSchema = Joi.object({
 })
 
 
-
-
-
 export const dynamic  = 'force-dynamic'
 
 export async function POST(req: Request) {
     try {
         await connectDB();
         const isAuthenticated = await AuthCheck(req);
-
+        
         if (isAuthenticated) {
             const data = await req.json();
             //console.log(data)
@@ -46,7 +43,7 @@ export async function POST(req: Request) {
                 return NextResponse.json({ success: false, message: "Failed to create Order . Please try again!" });
             }
         } else {
-            return NextResponse.json({ success: false, message: "You are not authorized Please login!" });
+            return NextResponse.json({ success: false, message: "You are not authorized Please login!"});
         }
     } catch (error) {
         console.log('Error in creating order :', error);

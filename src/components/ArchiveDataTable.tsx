@@ -35,37 +35,30 @@ export default function ArchiveDataTable() {
   const isLoading = useSelector((state: RootState) => state.Admin.archiveLoading);
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState<ArchiveData[] | []>([]);
-  const [count, setCount] = useState(0);
   const [imgs, SetImgs] = useState<any[] | []>([]);
   const [fbaseImgPath, setFbaseImgPath] = useState([{}]);
 
-  var i = count;
-  var ii2 = count;
+  var ii2 = 0;
   const pendingDeleteArchive = {
     'archId' : '',
-    'count' : count,
   };
-  const [catList, setCatList] = useState(pendingDeleteArchive);
+  const [arcList, setArcList] = useState(pendingDeleteArchive);
 
   useEffect(() => {
     setArchData(data)
-    
   }, [data])
 
 
   useEffect(() => {
     setFilteredData(data);
     if(undefined !== data) {
-
       for (var link of data) {
-
         if(link.archiveType=='lookbook'){
           var imagesArr = link.archiveImgUrls.split(';')
         }
         else{
           var imagesArr = link.archiveImage
         }
-
       }
 
       SetImgs(imagesArr)
@@ -73,17 +66,11 @@ export default function ArchiveDataTable() {
   }, [data])
 
   const askToDeleteArchive = async (id: string) => {
-    if( '' == catList.archId) {
-      i++
-      pendingDeleteArchive.count = i;
+    if( '' == arcList.archId) {
       pendingDeleteArchive.archId = id;
-      setCount(i)
-      setCatList(pendingDeleteArchive);
-    }else if('' != catList.archId) {
-      i++
-      pendingDeleteArchive.count = i;
-      setCount(i)
-      setCatList(pendingDeleteArchive);
+      setArcList(pendingDeleteArchive);
+    } else {
+      setArcList(pendingDeleteArchive);
     }
   }
 
@@ -100,14 +87,13 @@ export default function ArchiveDataTable() {
           case 'lookbook': 
             if (row?.archiveImgUrls !== 'null') {
               const tm = row?.archiveImgUrls.split(';')
-              //var lbImgs = ''
+
               for (let index = 0; index < tm.length; index++) {
                 ii2++
                 const element = tm[index];
-                //lbImgs = lbImgs + '<img src="'+element+'" className="h-12 col mx-auto" key="'+ii2+'" />'
                 return <img src={element} className="h-12 col mx-auto" key={ii2} />
               }
-//return lbImgs
+
             }
             break;
           case 'event':
@@ -124,8 +110,8 @@ export default function ArchiveDataTable() {
         <div className="flex items-center justify-start px-2 h-20">
           <button onClick={() => router.push(`/archive/update-archive/${row?._id}`)} className="w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700">Update</button>
           {
-            count > 0 && catList?.archId == row?._id ? 
-            <button onClick={() => handleDeleteArchive(row?._id, row?.archiveImage)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Are you sure ? Click again to confirm</button> : 
+            arcList?.archId == row?._id ? 
+            <button onClick={() => handleDeleteArchive(row?._id, row?.archiveImage, row?.archiveType)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Are you sure ? Click again to confirm</button> : 
             <button onClick={() => askToDeleteArchive(row?._id)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Delete</button>
           }
         </div>
@@ -134,21 +120,33 @@ export default function ArchiveDataTable() {
   ];
 
   const getFileNameFromFbaseItem = (url: string) => {
-
     var firebasePath = url.split('o/lookbook%2F')[1].split('?')[0]
     return firebasePath;
   }
 
-  const handleDeleteArchive = async (id: string, url: string) => {
+  const handleDeleteArchive = async (id: string, url: string, type: string) => {
 
-    imgs?.map((item: any) => {
-      if (item != '') { 
+    switch(type){
+      case 'lookbook':
+        imgs?.map((item: any) => {
+          if (item != '') { 
+            const imgPath = getFileNameFromFbaseItem(item);
+            fbaseImgPath.push(imgPath)
+            console.log('ELEM PATH' + imgPath);
+          }
+        })
+      break;
 
-        const imgPath = getFileNameFromFbaseItem(item);
-        fbaseImgPath.push(imgPath)
+      case 'event':
+        if (imgs && imgs[0]?.toString()!='') { 
+          console.log(url);
+        }
 
-      }
-    })
+      default:
+        break;
+    }
+    
+    console.log('FBIMGPATH' + fbaseImgPath);
     
     const listRef = ref(storage,'lookbook')
     listAll(listRef)
@@ -160,11 +158,16 @@ export default function ArchiveDataTable() {
              * Si le nom de l'image est contenu dans le tableau du state
              * alors elle doit être effacée
              */
+
+            console.log(itemRef.name);
+
             deleteObject(itemRef)
             .then(() => [console.log(itemRef.name + ' object has been deleted')])
             .catch((error) => {
                   console.log(error)
             });
+
+
           }
 
         })
@@ -220,7 +223,7 @@ export default function ArchiveDataTable() {
           <input className="w-60 dark:bg-transparent py-2 px-2 outline-none border-b-2 border-orange-600" type={"search"}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={"Category Name"} />
+              placeholder={"Archive Name"} />
       }
         className="bg-white px-4 h-4/6"
       />

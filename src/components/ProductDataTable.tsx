@@ -144,7 +144,7 @@ export default function ProductDataTable() {
           <input className='w-60 dark:bg-transparent py-2 px-2 outline-none  border-b-2 border-orange-600' type={"search"}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={"Category Name"} />
+            placeholder={"Product Name"} />
         }
         className="bg-white px-4 h-4/6"
       />

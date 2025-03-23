@@ -1,6 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-
 export const dynamic  = 'force-dynamic'
 
 const AuthCheck = async (req: Request) => {
@@ -15,7 +14,5 @@ const AuthCheck = async (req: Request) => {
       return false
     }
   }
-  
-
 
 export default AuthCheck;

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/utils/Firebase'
@@ -12,6 +12,8 @@ import { add_new_archive } from '@/Services/Admin/archive';
 import Cookies from 'js-cookie';
 import DatePicker from 'react-date-picker';
 import '../../styles/admin-lookbook.css'
+import "../../styles/react-date-picker/dist/DatePicker.css";
+import '../../styles/admin-archives.css'
 
 type Inputs = {
     name: string,
@@ -71,11 +73,11 @@ export default function AddArchive() {
 
 
     const [loader, setLoader] = useState(false)
-    const [dateValue, setDateValue] = useState(new Date());
+    const [startDateValue, setStartDateValue] = useState(new Date());
+    const [dateValue, setDateValue] = useState(startDateValue);
     const Router = useRouter();
 
     const onChangeDate = (date: any) => {
-        console.log('date' + date)
         setDateValue(() => date);
     }
 
@@ -183,39 +185,23 @@ export default function AddArchive() {
                                 <label className="label">
                                     <span className="label-text">Choose Date Event Archive</span>
                                 </label>
-                                <DatePicker className="m-auto mx-auto mb-2 clear"
+                                <DatePicker className="d-flex flex-column w-<800> datepicker"
                                             onChange={(dateValue)=>{onChangeDate(dateValue)}}
-                                            format="dd/MM/yyyy h:mm aa"
+                                            format="dd/MM/yyyy h:mm"
                                             minDate={dateValue}
                                             closeCalendar={false}
+                                            
                                         />
-                            </div>
+                                {
+                                    startDateValue < dateValue && (
+                                        <pre><span className="label-text">Date prévue :</span>{dateValue.toLocaleString()}</pre>
 
-                            <div className="max-w-full h-<200> inline-block relative">
-&nbsp;
+                                    )
+                                }
                             </div>
                             <div className="max-w-full h-<200> inline-block relative">
-                            &nbsp;
+                                &nbsp;
                             </div>
-                            <div className="max-w-full h-<200> inline-block relative">
-                            &nbsp;
-                            </div>
-                            <div className="max-w-full h-<200> block relative">
-                            &nbsp;
-                            </div>
-                            <div className="max-w-full h-<200> block relative">
-                            &nbsp;
-                            </div>
-                            <div className="max-w-full h-<200> block relative">
-                            &nbsp;
-                            </div>
-                            <div className="max-w-full h-<200> block relative">
-                            &nbsp;
-                            </div>
-                            <div className="max-w-full h-<200> block relative">
-                            &nbsp;
-                            </div>
-                            <div className="max-w-full h-<200> block relative"></div>
                             <button className="btn btn-block mt-3 m-auto relative">Done !</button>
                         </form >
                     </div >

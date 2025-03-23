@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import Navbar from '@/components/Navbar';
 import { setUserData } from '@/utils/UserDataSlice';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { TailSpin } from 'react-loader-spinner';
 
 export default function Login() {
@@ -19,7 +19,8 @@ export default function Login() {
     const [formData, setFormData] = useState({ email: "", password: "", remember: "" });
     const [error, setError] = useState({ email: "", password: "", generic: "" });
     const [loading, setLoading] = useState<Boolean>(false);
-
+    const useParamObject = useSearchParams().get('token')
+    console.log(useParamObject)
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();

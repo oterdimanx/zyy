@@ -89,7 +89,7 @@ export const delete_an_image = async (id:string) => {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log('Error in deleting Image (service) =>', error)
+    console.log('Error in deleting Image (archive service) =>', error)
   }
 }
 
