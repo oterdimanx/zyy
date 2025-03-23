@@ -8,7 +8,6 @@ import TopCategories from '@/components/TopCategories'
 import Loading from './loading'
 import { get_all_categories } from '@/Services/Admin/category'
 import { get_all_products } from '@/Services/Admin/product'
-import { ToastContainer } from 'react-toastify'
 import { setCategoryData, setCatLoading, setProdLoading, setProductData, setLookbookData, setLookbookLoading } from '@/utils/AdminSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '@/utils/UserDataSlice'
@@ -22,18 +21,11 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [ratio, setRatio] = useState(16/9) 
 
-/*
-  useEffect(() => {
-    toast.warning("Application is under development , some features may not work properly")
-    toast.warning('This is a demo website, you can not buy anything from here')
-  }, [])
-*/
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (!userData) return;
     dispatch(setUserData(JSON.parse(userData)));
   }, [])
-
 
   useEffect(() => {
     FetchDataOFProductAndCategory()
@@ -72,7 +64,7 @@ export default function Home() {
             <Footer />
           </>
       }
-      <ToastContainer />
+
     </>
   )
 }

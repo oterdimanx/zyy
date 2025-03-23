@@ -43,7 +43,7 @@ export default function Page() {
         if (cartData?.success) {
             dispatch(setBookmark(cartData?.data))
         } else {
-            toast.error(cartData?.message)
+            throw (cartData?.message)
         }
         setLoading(false)
     }

@@ -34,15 +34,12 @@ interface BookmarkItem {
     _id: string;
 }
 
-
-
 interface userData {
     email: String,
     role: String,
     _id: String,
     name: String
 }
-
 
 export default function FavouriteProductDataTable() {
     const Router = useRouter();
@@ -61,12 +58,6 @@ export default function FavouriteProductDataTable() {
     useEffect(() => {
         setFilteredData(bookmarkData);
     }, [bookmarkData])
-
-
-
-
-
-
 
     const columns = [
         {
@@ -100,7 +91,7 @@ export default function FavouriteProductDataTable() {
         if (cartData?.success) {
             dispatch(setBookmark(cartData?.data))
         } else {
-            toast.error(cartData?.message)
+            throw (cartData?.message)
         }
     }
 
@@ -110,11 +101,11 @@ export default function FavouriteProductDataTable() {
     const handleDeleteProduct = async (id: string) => {
         const res = await delete_a_bookmark_item(id);
         if (res?.success) {
-            toast.success(res?.message)
+            console.log(res?.message)
             fetchBookmarkData()
         }
         else {
-            toast.error(res?.message)
+            throw (res?.message)
         }
     }
 

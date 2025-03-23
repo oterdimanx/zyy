@@ -1,7 +1,6 @@
-import { bookmark_product } from '@/Services/common/bookmark';
+import { bookmark_product, get_all_bookmark_items } from '@/Services/common/bookmark';
 import { add_to_cart } from '@/Services/common/cart';
 import { RootState } from '@/Store/store';
-import { setUserData } from '@/utils/UserDataSlice';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import React from 'react'
@@ -9,8 +8,8 @@ import { BsCartPlus } from 'react-icons/bs'
 import { GrFavorite } from 'react-icons/gr'
 import { MdFavorite } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import LearnMore from './LearnMore';
+
 
 type ProductData = {
     productName: string,
@@ -36,27 +35,33 @@ type User = {
 
 export default function ProductCard({ productName, productFeatured, productImage, productCategory, productPrice, _id, productSlug }: ProductData) {
     const router = useRouter();
-
     const user = useSelector((state: RootState) => state.User.userData) as User | null
 
     const AddToCart = async () => {
         const finalData = { productID: _id, userID: user?._id }
         const res = await add_to_cart(finalData);
         if (res?.success) {
-            toast.success(res?.message);
+            console.log(res?.message);
         } else {
-            toast.error(res?.message)
+            console.log('An error occured (AddToCart) : ' + res?.message)
         }
     }
 
-
     const AddToBookmark  =  async () => {
-        const finalData = { productID: _id, userID: user?._id }
-        const res = await bookmark_product(finalData);
-        if (res?.success) {
-            toast.success(res?.message);
-        } else {
-            toast.error(res?.message)
+        const bmarkData = await get_all_bookmark_items(user?._id)
+
+        if(bmarkData?.data?.length > 0){
+            // le bookmark est déjà ajouté, on ne fait rien
+            return false
+        } else{
+            const finalData = { productID: _id, userID: user?._id }
+            const res = await bookmark_product(finalData);
+            if (res?.success) {
+                console.log('bookmark added')
+                // le bookmark a bien été ajouté
+            } else {
+                console.log('An error occured (AddToBookmark) : ' + res?.message)
+            }
         }
     }
 

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/Store/store'
 import { add_to_cart } from '@/Services/common/cart'
 import { setUserData } from '@/utils/UserDataSlice'
-import { bookmark_product } from '@/Services/common/bookmark'
+import { bookmark_product, get_all_bookmark_items } from '@/Services/common/bookmark'
 
 interface pageParam {
     id: string
@@ -74,12 +74,19 @@ export default function Page() {
     }
 
     const AddToBookmark = async () => {
-        const finalData = { productID: id, userID: user?._id }
-        const res = await bookmark_product(finalData);
-        if (res?.success) {
-            console.log('success' + res?.message);
-        } else {
-            throw new Error(res?.message)
+        const bmarkData = await get_all_bookmark_items(user?._id)
+
+        if(bmarkData?.data?.length > 0){
+            // le bookmark est déjà ajouté, on ne fait rien
+            return false
+        }else {
+            const finalData = { productID: id, userID: user?._id }
+            const res = await bookmark_product(finalData);
+            if (res?.success) {
+                console.log('success' + res?.message);
+            } else {
+                throw new Error(res?.message)
+            }
         }
     }
 

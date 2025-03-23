@@ -23,10 +23,14 @@ type Inputs = {
     quantity :  Number,
     categoryID : string,
     image: Array<File>,
+    image2: Array<File>,
+    image3: Array<File>,
 }
 
-interface loaderType {
-    loader: Boolean
+interface fileNames {
+    productImage : String,
+    productImage2: String,
+    productImage3: String,
 }
 
 const uploadImages = async (file: File) => {
@@ -97,21 +101,41 @@ export default function AddProduct() {
     });
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
+
         setLoader(true)
         const CheckFileSize = maxSize(data.image[0]);
         if (CheckFileSize) throw ('Image size must be less then 1MB')
+        const CheckFileSize2 = maxSize(data.image2[0]);
+        if (CheckFileSize2) throw ('Image size must be less then 1MB')
+        const CheckFileSize3 = maxSize(data.image3[0]);
+        if (CheckFileSize3) throw ('Image size must be less then 1MB')
         const uploadImageToFirebase = await uploadImages(data.image[0]);
+        const uploadImageToFirebase2 = await uploadImages(data.image2[0]);
+        const uploadImageToFirebase3 = await uploadImages(data.image3[0]);
 
-        const finalData = { productName: data.name, productDescription: data.description, productImage: uploadImageToFirebase, productSlug: data.slug , productFeatured  : data.feature , productPrice : data.price , productQuantity : data.quantity , productCategory : data.categoryID}
+        const finalData = { 
+            productName: data.name, 
+            productDescription: data.description, 
+            productImage: uploadImageToFirebase,
+            productImage2: uploadImageToFirebase2, 
+            productImage3: uploadImageToFirebase3, 
+            productSlug: data.slug , 
+            productFeatured  : data.feature , 
+            productPrice : data.price , 
+            productQuantity : data.quantity , 
+            productCategory : data.categoryID
+        }
+
         const res = await add_new_product(finalData)
+
         if (res.success) {
-            //toast.success(res?.message);
+
             setTimeout(() => {
                 Router.push('/Dashboard')
             }, 2000);
             setLoader(false)
         } else {
-            //toast.error(res?.message)
+
             setLoader(false)
         }
     }
@@ -158,8 +182,8 @@ export default function AddProduct() {
                                 <label className="label">
                                     <span className="label-text">Choose Category</span>
                                 </label>
-                                <select   {...register("categoryID", { required: true })}  className="select select-bordered">
-                                    <option disabled selected>Pick  one category </option>
+                                <select {...register("categoryID", { required: true })} className="select select-bordered" defaultValue="">
+                                    <option disabled value="">Pick  one category </option>
                                     {
                                         category?.map((item) => {
                                             return (
@@ -168,6 +192,7 @@ export default function AddProduct() {
                                         })
                                     }
                                 </select>
+                                {errors.categoryID && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div>
                             <div className="form-control w-full mb-2">
                                 <label className="label">
@@ -216,10 +241,15 @@ export default function AddProduct() {
                             </div>
                             <div className="form-control w-full">
                                 <label className="label">
-                                    <span className="label-text">Add product Image</span>
+                                    <span className="label-text">Add product Images</span>
                                 </label>
                                 <input accept="image/*" max="1000000"  {...register("image", { required: true })} type="file" className="file-input file-input-bordered w-full " />
                                 {errors.image && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
+                                <input accept="image/*" max="1000000"  {...register("image2", { required: true })} type="file" className="file-input file-input-bordered w-full " />
+                                {errors.image2 && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
+
+                                <input accept="image/*" max="1000000"  {...register("image3", { required: true })} type="file" className="file-input file-input-bordered w-full " />
+                                {errors.image3 && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
 
                             </div>
 

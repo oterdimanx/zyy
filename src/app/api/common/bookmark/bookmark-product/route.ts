@@ -4,15 +4,10 @@ import { NextResponse } from "next/server";
 import Bookmark from "@/model/Bookmark";
 import Joi from "joi";
 
-
 const bookmark = Joi.object({
     userID: Joi.string().required(),
     productID: Joi.string().required()
 })
-
-
-
-
 
 export const dynamic  = 'force-dynamic'
 
