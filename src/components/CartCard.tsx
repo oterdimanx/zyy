@@ -9,8 +9,6 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { AiFillDelete } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
-import { useSWRConfig } from 'swr'
 
 type Data = {
     productID: {
@@ -26,8 +24,6 @@ type Data = {
     },
     _id: string,
     quantity : number,
-
-
 }
 
 interface userData {
@@ -44,14 +40,15 @@ export default function CartCard({ productID, userID, _id , quantity }: Data) {
     const Router = useRouter();
     const user = useSelector((state: RootState) => state.User.userData) as userData | null
     const cart = useSelector((state: RootState) => state.Cart.cart) as Data[] | null
+    const [errorMsg, SetErrorMsg] = useState('')
 
     const handleDeleteCartItem = async () => {
         const res = await delete_a_cart_item(_id)
         if (res?.success) {
             fetchCartData();
-            return toast.success(res?.message)
+            console.log(res?.message)
         }
-        return toast.error(res?.message)
+        SetErrorMsg(res?.message)
     }
 
 
@@ -61,10 +58,9 @@ export default function CartCard({ productID, userID, _id , quantity }: Data) {
         if (cartData?.success) {
             dispatch(setCart(cartData?.data))
         } else {
-            toast.error(cartData?.message)
+            SetErrorMsg(cartData?.message)
         }
     }
-
 
 
     const handleIncrement = () => {
@@ -76,7 +72,7 @@ export default function CartCard({ productID, userID, _id , quantity }: Data) {
                         quantity: Number(item?.quantity) + 1,
                     }
                 }else{
-                    toast.error('Product Quantity is not available')
+                    SetErrorMsg('Product Quantity is not available')
                     return {
                         ...item,
                         quantity: Number(item?.productID?.productQuantity),
@@ -98,6 +94,7 @@ export default function CartCard({ productID, userID, _id , quantity }: Data) {
 
 
     const handleDecrement = () => {
+        SetErrorMsg('')
         const newCart = cart?.map((item: Data) => {
             if (item._id === _id) {
                 if (item?.quantity > 1) {
@@ -121,14 +118,15 @@ export default function CartCard({ productID, userID, _id , quantity }: Data) {
     }
 
     return (
-        <div className='bg-white w-10/12  rounded-xl m-2 border-b flex-col md:flex-row h-72  md:h-40 py-2 px-4 flex justify-around items-center'>
-            <Image src={productID?.productImage || '/pants.png'} alt='no image found' width={100} height={150} className='rounded' />
-            <h3 className='font-semibold text-lg'>Rs {productID?.productPrice}</h3>
-            <div className='flex  justify-center items-center'>
-                <button onClick={handleIncrement} className='btn btn-circle dark:text-white  text-xl'>+</button>
-                <p className='mx-2 text-xl'>{quantity}</p>
-                <button onClick={handleDecrement} className='btn btn-circle dark:text-white  text-xl'>-</button>
+        <div className="bg-white w-10/12 rounded-xl m-2 border-b flex-col md:flex-row h-72  md:h-40 py-2 px-4 flex justify-around items-center">
+            <Image src={productID?.productImage || '/pants.png'} alt="no image found" width={100} height={150} className="rounded" />
+            <h3 className="font-semibold text-lg">Rs {productID?.productPrice}</h3>
+            <div className="flex  justify-center items-center">
+                <button onClick={handleIncrement} className="btn btn-circle dark:text-white  text-xl">+</button>
+                <p className="mx-2 text-xl">{quantity}</p>
+                <button onClick={handleDecrement} className="btn btn-circle dark:text-white  text-xl">-</button>
             </div>
+            <span className="text-red-500 text-xs mt-2">{errorMsg}</span>
             <AiFillDelete onClick={handleDeleteCartItem} className="text-red-500 text-2xl cursor-pointer " />
         </div>
     )

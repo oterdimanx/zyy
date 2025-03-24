@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { MdFavorite } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 
 interface userData {
     email: String,
@@ -39,11 +39,11 @@ export default function Page() {
 
     const fetchBookmarkData = async () => {
         if (!user?._id) return Router.push('/')
-        const cartData = await get_all_bookmark_items(user?._id)
-        if (cartData?.success) {
-            dispatch(setBookmark(cartData?.data))
+        const bookmarkData = await get_all_bookmark_items(user?._id)
+        if (bookmarkData?.success) {
+            dispatch(setBookmark(bookmarkData?.data))
         } else {
-            throw (cartData?.message)
+            console.log(bookmarkData?.message)
         }
         setLoading(false)
     }
