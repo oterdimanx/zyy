@@ -8,6 +8,7 @@ import Joi from "joi";
 const AddArchiveSchema  = Joi.object({
   archiveName  : Joi.string().required(),
   archiveImgUrls  : Joi.string(),
+  archiveLookbookCreatedAt  : Joi.date(),
   archiveType  : Joi.string().required(),
   archiveDescription  : Joi.string().required(),
   archiveImage  : Joi.string().required(),
@@ -29,14 +30,14 @@ export async function POST(req: Request) {
 
       const data = await req.json();
       
-      const {archiveName , archiveImgUrls , archiveType , archiveDescription, archiveImage, archiveSlug, archiveDate } =  data;
-      
-      const { error } = AddArchiveSchema.validate({archiveName , archiveImgUrls , archiveType , archiveDescription, archiveImage, archiveSlug, archiveDate});
+      const {archiveName , archiveImgUrls , archiveLookbookCreatedAt , archiveType , archiveDescription, archiveImage, archiveSlug, archiveDate } =  data;
 
+      const { error } = AddArchiveSchema.validate({archiveName , archiveImgUrls , archiveLookbookCreatedAt , archiveType , archiveDescription, archiveImage, archiveSlug, archiveDate});
+      
       if (error) return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
 
       const saveData = await Archive.create(data);
-      //console.log(saveData)
+      
       if (saveData) {
         return NextResponse.json({ success: true, message: "Archive added successfully!" });
       } else {

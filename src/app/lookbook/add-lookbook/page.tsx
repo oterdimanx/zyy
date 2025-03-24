@@ -134,10 +134,11 @@ export default function AddLookbook() {
 
       if (archive) {
         const dateArchived = new Date();
+        const createdAt = new Date(lbData.createdAt);
         /* 
         cas où le lookbook doit être archivé puis supprimé 
         */
-        const archiveData = { archiveName: lbData.lookbookName, archiveImgUrls: lbData.lookbookImageUrls, archiveType: 'lookbook', archiveDescription: 'description', archiveImage: 'archiveImage', archiveSlug: 'archiveSlug', archiveDate: dateArchived }
+        const archiveData = { archiveName: lbData.lookbookName, archiveImgUrls: lbData.lookbookImageUrls, archiveLookbookCreatedAt: createdAt, archiveType: 'lookbook', archiveDescription: 'description', archiveImage: 'archiveImage', archiveSlug: 'archiveSlug', archiveDate: dateArchived }
 
         const archived = await archive_a_lookbook(archiveData)
         if (archived?.success) {
@@ -146,17 +147,14 @@ export default function AddLookbook() {
                 console.log('successe delete')
             }
         } else {
-            console.log(archived?.message)
             setLoader(false)
-            throw new Error (archived?.message)
+            console.log(archived?.message)
         }
       }
-
       /* 
       cas où aucun lookbook n'est détecté en base de données et 
       archive vaut false, on procède à la création 
       */
-
       const res = await add_new_lookbook(finalData)
 
       if (res.success) {
