@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { add_new_archive } from '@/Services/Admin/archive';
 import Cookies from 'js-cookie';
 import DatePicker from 'react-date-picker';
+import slugify from 'react-slugify';
 import '../../styles/admin-lookbook.css'
 import "../../styles/react-date-picker/dist/DatePicker.css";
 import '../../styles/admin-archives.css'
@@ -71,7 +72,7 @@ interface userData {
 
 export default function AddArchive() {
 
-
+    const [archiveName, setArchiveName] = useState<any>('')
     const [loader, setLoader] = useState(false)
     const [startDateValue, setStartDateValue] = useState(new Date());
     const [dateValue, setDateValue] = useState(startDateValue);
@@ -79,6 +80,14 @@ export default function AddArchive() {
 
     const onChangeDate = (date: any) => {
         setDateValue(() => date);
+    }
+
+    const archiveSlug = async  (slugField:/*unresolved*/ any) => {
+        setArchiveName(slugify(slugField))
+    }
+    
+    const setArchiveNameValue = async  () => {
+        setArchiveName(slugify(archiveName))
     }
 
     useEffect(() => {
@@ -157,14 +166,14 @@ export default function AddArchive() {
                                 <label className="label">
                                     <span className="label-text">Archive Name</span>
                                 </label >
-                                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{archiveSlug(e.currentTarget.value)}} onChange={setArchiveNameValue} />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Archive Slug</span>
                                 </label>
-                                <input  {...register("slug", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={archiveName} onChange={(e)=>{setArchiveName(e.currentTarget.value)}} />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div>
                             <div className="form-control">

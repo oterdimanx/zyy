@@ -14,6 +14,7 @@ import { setNavActive } from '@/utils/AdminNavSlice';
 import Cookies from 'js-cookie';
 import { storage } from '@/utils/Firebase'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import slugify from 'react-slugify';
 
 type Inputs = {
     _id: string,
@@ -141,7 +142,7 @@ export default function Page() {
             _id: id,
             name: data.name !== arcData?.archiveName ? data.name : arcData?.archiveName,
             description: data.description !== arcData?.archiveDescription ? data.description : arcData?.archiveDescription,
-            slug: data.slug !== arcData?.archiveSlug ? data.slug : arcData?.archiveSlug,
+            slug: data.slug !== arcData?.archiveSlug ? slugify(data.slug) : arcData?.archiveSlug,
             type: data.type !== arcData?.archiveType ? data.type.toString() : arcData?.archiveType.toString(),
             image: uploadImageToFirebase,
         };

@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import Cookies from 'js-cookie';
+import slugify from 'react-slugify';
 import { useSWRConfig } from "swr"
 import { add_new_product } from '@/Services/Admin/product';
 
@@ -25,12 +26,6 @@ type Inputs = {
     image: Array<File>,
     image2: Array<File>,
     image3: Array<File>,
-}
-
-interface fileNames {
-    productImage : String,
-    productImage2: String,
-    productImage3: String,
 }
 
 const uploadImages = async (file: File) => {
@@ -82,10 +77,12 @@ interface userData {
     name: String
 }
 
+
 export default function AddProduct() {
 
     const [loader, setLoader] = useState(false)
-    const Router = useRouter();
+    const [productName, setProductName] = useState<any>('')
+    const Router = useRouter()
     const category =  useSelector((state : RootState) => state.Admin.category) as CategoryData[] | undefined
 
     useEffect(() => {
@@ -93,8 +90,15 @@ export default function AddProduct() {
         if (!Cookies.get('token') || user?.role !== 'admin') {
             Router.push('/')
         }
-        
     }, [  Router])
+
+    const productSlug = async  (slugField:/*unresolved*/ any) => {
+        setProductName(slugify(slugField))
+    }
+    
+    const setProductNameValue = async  () => {
+        setProductName(slugify(productName))
+    }
 
     const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
         criteriaMode: "all"
@@ -198,14 +202,14 @@ export default function AddProduct() {
                                 <label className="label">
                                     <span className="label-text">Product Name</span>
                                 </label >
-                                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} onChange={setProductNameValue} />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Product Slug</span>
                                 </label>
-                                <input  {...register("slug", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={productName} onChange={(e)=>{setProductName(e.currentTarget.value)}} />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
 
                             </div>

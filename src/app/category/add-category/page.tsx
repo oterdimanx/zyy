@@ -10,6 +10,7 @@ import { TailSpin } from 'react-loader-spinner';
 import { useRouter } from 'next/navigation';
 import { add_new_category } from '@/Services/Admin/category';
 import Cookies from 'js-cookie';
+import slugify from 'react-slugify';
 
 type Inputs = {
     name: string,
@@ -67,6 +68,7 @@ export default function AddCategory() {
 
     const [loader, setLoader] = useState(false)
     const Router = useRouter();
+    const [slugCatName, setSlugCatName] = useState<any>('')
     
     useEffect(() => {
         const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -76,6 +78,13 @@ export default function AddCategory() {
         
     }, [  Router])
 
+    const categorySlug = async  (slugField:/*unresolved*/ any) => {
+        setSlugCatName(slugify(slugField))
+    }
+    
+    const setCategoryNameValue = async  () => {
+        setSlugCatName(slugify(slugCatName))
+    }
 
     const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
         criteriaMode: "all"
@@ -143,14 +152,14 @@ export default function AddCategory() {
                                 <label className="label">
                                     <span className="label-text">Category Name</span>
                                 </label >
-                                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onChange={setCategoryNameValue} onBlur={(e)=>{categorySlug(e.currentTarget.value)}} />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Category Slug</span>
                                 </label>
-                                <input  {...register("slug", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={slugCatName} onChange={(e)=>{setSlugCatName(e.currentTarget.value)}} />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div>
                             <div className="form-control">

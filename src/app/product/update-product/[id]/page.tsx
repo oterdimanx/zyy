@@ -16,6 +16,7 @@ import { get_product_by_id, update_a_product } from '@/Services/Admin/product';
 import Cookies from 'js-cookie';
 import { storage } from '@/utils/Firebase'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import slugify from 'react-slugify';
 
 type Inputs = {
   _id: string,
@@ -53,10 +54,6 @@ type CategoryData = {
   createdAt: string;
   updatedAt: string;
 };
-
-interface pageParam {
-  id: string
-}
 
 interface userData {
   email: String,
@@ -98,10 +95,8 @@ const maxSize = (value: File) => {
   return fileSize < 1 ? false : true
 }
 
-
 export default function Page() {
 
-  
   const [loader, setLoader] = useState(false)
   const Router = useRouter();
   const dispatch = useDispatch();
@@ -175,7 +170,7 @@ export default function Page() {
       _id: id,
       name: data.name !== prodData?.productName ? data.name : prodData?.productName,
       description: data.description !== prodData?.productDescription ? data.description : prodData?.productDescription,
-      slug: data.slug !== prodData?.productSlug ? data.slug : prodData?.productSlug,
+      slug: data.slug !== prodData?.productSlug ? slugify(data.slug) : prodData?.productSlug,
       feature: data.feature !== prodData?.productFeatured ? data.feature : prodData?.productFeatured,
       quantity: data.quantity !== prodData?.productQuantity ? data.quantity : prodData?.productQuantity,
       price: data.price !== prodData?.productPrice ? data.price : prodData?.productPrice,
