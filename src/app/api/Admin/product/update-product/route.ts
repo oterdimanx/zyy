@@ -10,9 +10,9 @@ export async function PUT(req: Request) {
 
     if (isAuthenticated === 'admin') {
       const data = await req.json();
-      const  {name, _id, description, slug, quantity, price, categoryID, feature, image} = data
+      const  {name, _id, description, slug, quantity, price, categoryID, feature, image, image2, image3} = data
 
-      const saveData = await Product.findOneAndUpdate({_id: _id} , { productName : name , productDescription : description ,productSlug: slug , productPrice : price ,  productQuantity : quantity ,  productCategory : categoryID, productFeatured : feature, productImage : image  }  , { new: true });
+      const saveData = await Product.findOneAndUpdate({_id: _id} , { productName : name , productDescription : description , productSlug: slug , productPrice : price ,  productQuantity : quantity ,  productCategory : categoryID, productFeatured : feature, productImage : image, productImage2 : image2, productImage3 : image3  }  , { new: true });
 
       if (saveData) {
 

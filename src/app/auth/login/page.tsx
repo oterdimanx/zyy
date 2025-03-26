@@ -20,7 +20,6 @@ export default function Login() {
     const [error, setError] = useState({ email: "", password: "", generic: "" });
     const [loading, setLoading] = useState<Boolean>(false);
     const useParamObject = useSearchParams().get('token')
-    console.log(useParamObject)
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();

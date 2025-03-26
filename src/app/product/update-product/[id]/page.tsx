@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import React, { useEffect, useState, use } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ToastContainer } from 'react-toastify';
 import { TailSpin } from 'react-loader-spinner';
 import { delete_an_image } from '@/Services/Admin/category';
 import { useRouter, useParams } from 'next/navigation';
@@ -28,6 +27,8 @@ type Inputs = {
   quantity: Number,
   categoryID: string,
   image: any,
+  image2: any,
+  image3: any,
 }
 
 type ProductData = {
@@ -35,6 +36,8 @@ type ProductData = {
   productName: string,
   productDescription: string,
   productImage: string,
+  productImage2: string,
+  productImage3: string,
   productSlug: string,
   productPrice: Number,
   productQuantity: Number,
@@ -98,12 +101,14 @@ const maxSize = (value: File) => {
 export default function Page() {
 
   const [loader, setLoader] = useState(false)
+  const [newError, setNewError] = useState('')
   const Router = useRouter();
   const dispatch = useDispatch();
   const [prodData, setprodData] = useState<ProductData | undefined>(undefined);
   const category = useSelector((state: RootState) => state.Admin.category) as CategoryData[] | undefined
   const useParamObject = useParams<{ id: string }>()
   const id  = useParamObject.id;
+  const [productName, setProductName] = useState<any>('')
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -111,6 +116,14 @@ export default function Page() {
       Router.push('/')
     }
   }, [Router])
+
+  const productSlug = async  (slugField:/*unresolved*/ any) => {
+    setProductName(slugify(slugField))
+  }
+
+  const setProductNameValue = async  () => {
+      setProductName(slugify(productName))
+  }
 
   const { data, isLoading } = useSWR('/gettingProductbyID', () => get_product_by_id(id))
   //if (data?.success !== true) throw new Error (data?.message)
@@ -150,6 +163,8 @@ export default function Page() {
       setValue('quantity', prodData?.productQuantity)
       setValue('price', prodData?.productPrice)
       setValue('image', prodData?.productImage ? (prodData?.productImage[0] ?? '') : '')
+      setValue('image2', prodData?.productImage2 ? (prodData?.productImage2[0] ?? '') : '')
+      setValue('image3', prodData?.productImage3 ? (prodData?.productImage3[0] ?? '') : '')
     }
   }
 
@@ -161,35 +176,58 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<Inputs> = async data => {
     setLoader(false)
-    
+    setNewError('')
+
     const CheckFileSize = maxSize(data.image[0]);
-    if (CheckFileSize) throw new Error ('Image size must be less then 1MB')
+    if (CheckFileSize) {
+      setNewError('Image 1 size must be less then 1MB')
+      throw new Error('Image size must be less then 1MB')
+    } else {
+      setNewError('')
+    }
+    const CheckFileSize2 = maxSize(data.image2[0]);
+    if (CheckFileSize2) {
+      setNewError('Image 2 size must be less then 1MB')
+      throw new Error('Image 2 size must be less then 1MB')
+    } else {
+      setNewError('')
+    }
+    const CheckFileSize3 = maxSize(data.image3[0]);
+    if (CheckFileSize3) {
+      setNewError('Image 3 size must be less then 1MB')
+      throw new Error('Image 3 size must be less then 1MB')
+    } else {
+      setNewError('')
+    }
+
     const uploadImageToFirebase = await uploadImages(data.image[0]);
+    const uploadImageToFirebase2 = await uploadImages(data.image2[0]);
+    const uploadImageToFirebase3 = await uploadImages(data.image3[0]);
 
     const updatedData: Inputs = {
       _id: id,
       name: data.name !== prodData?.productName ? data.name : prodData?.productName,
       description: data.description !== prodData?.productDescription ? data.description : prodData?.productDescription,
-      slug: data.slug !== prodData?.productSlug ? slugify(data.slug) : prodData?.productSlug,
+      slug: slugify(productName),
       feature: data.feature !== prodData?.productFeatured ? data.feature : prodData?.productFeatured,
       quantity: data.quantity !== prodData?.productQuantity ? data.quantity : prodData?.productQuantity,
       price: data.price !== prodData?.productPrice ? data.price : prodData?.productPrice,
       categoryID: data.categoryID !== prodData?.productCategory ? data.categoryID : prodData?.productCategory,
       image: uploadImageToFirebase,
+      image2: uploadImageToFirebase2,
+      image3: uploadImageToFirebase3,
     };
 
-    const res = await update_a_product(updatedData)
-    const imgRes = (prodData?.productImage != undefined) ? await delete_an_image(prodData?.productImage) : false;
-
+    const res = '' == newError ? await update_a_product(updatedData) : false
+    const imgRes = (prodData?.productImage != undefined && '' != newError) ? await delete_an_image(prodData?.productImage) : false;
+console.log(res)
     if (res?.success && imgRes) {
-      //toast.success(res?.message);
       dispatch(setNavActive('Base'))
       setTimeout(() => {
         Router.push("/Dashboard")
       }, 2000);
       setLoader(false)
     } else {
-      //toast.error(res?.message)
       setLoader(false)
     }
   }
@@ -250,14 +288,14 @@ export default function Page() {
                 <label className="label">
                   <span className="label-text">Product Name</span>
                 </label >
-                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} onChange={setProductNameValue} />
                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
               </div >
               <div className="form-control w-full mb-2">
                 <label className="label">
                   <span className="label-text">Product Slug</span>
                 </label>
-                <input  {...register("slug", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                <input {...register("slug", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onChange={(e)=>{setProductName(e.currentTarget.value)}} />
                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
 
               </div>
@@ -293,15 +331,23 @@ export default function Page() {
               </div>
               {
                 prodData && (
-                  <div className="form-control">
+                <div className="form-control">
                   <label className="label">
-                      <span className="label-text">Old Image</span>
+                      <span className="label-text">Main Image</span>
                   </label>
-                  <Image src={prodData?.productImage || '/pants.png'} alt='No Image Found' width={100} height={10} style={{ width: '50', height: '50' }}/>
-                  <input accept="image/*" max="1000000"  {...register("image", { required: true })} type="file" className="file-input file-input-bordered w-full" />
-                  {errors.image && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
 
-              </div>
+                  <Image src={prodData?.productImage || '/pants.png'} alt='Image Prpduit 1' width={100} height={10} style={{ width: '50', height: '50' }}/>
+                  <input {...register("image")} accept="image/*" max="1000000" type="file" className="file-input file-input-bordered w-full" />
+                  {errors.image && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
+                  <Image src={prodData?.productImage2 || '/pants.png'} alt='Image Prpduit 2' width={100} height={10} style={{ width: '50', height: '50' }}/>
+                  <input {...register("image2")} accept="image/*" max="1000000" type="file" className="file-input file-input-bordered w-full" />
+                  {errors.image2 && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
+                  <Image src={prodData?.productImage3 || '/pants.png'} alt='Image Prpduit 3' width={100} height={10} style={{ width: '50', height: '50' }}/>
+                  <input {...register("image3")} accept="image/*" max="1000000" type="file" className="file-input file-input-bordered w-full" />
+                  {errors.image3 && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
+                  {newError != '' && <span className="text-red-500 text-xs mt-2">Vous devez recharger toutes les images pour mettre à jour le produit</span>}
+                </div>
+                
                 )
               }
 
@@ -312,7 +358,7 @@ export default function Page() {
 
         )
       }
-      <ToastContainer />
+
     </div >
     
   )

@@ -118,12 +118,12 @@ export default function AddProduct() {
         const uploadImageToFirebase3 = await uploadImages(data.image3[0]);
 
         const finalData = { 
-            productName: data.name, 
+            productName: productName != '' ? productName : data.name, 
             productDescription: data.description, 
             productImage: uploadImageToFirebase,
             productImage2: uploadImageToFirebase2, 
             productImage3: uploadImageToFirebase3, 
-            productSlug: data.slug , 
+            productSlug: productName != '' ? productName : data.slug, 
             productFeatured  : data.feature , 
             productPrice : data.price , 
             productQuantity : data.quantity , 
@@ -131,7 +131,7 @@ export default function AddProduct() {
         }
 
         const res = await add_new_product(finalData)
-
+        console.log(res)
         if (res.success) {
 
             setTimeout(() => {
@@ -202,14 +202,14 @@ export default function AddProduct() {
                                 <label className="label">
                                     <span className="label-text">Product Name</span>
                                 </label >
-                                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} onChange={setProductNameValue} />
+                                <input name="name" required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} onChange={setProductNameValue} />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Product Slug</span>
                                 </label>
-                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={productName} onChange={(e)=>{setProductName(e.currentTarget.value)}} />
+                                <input name="slug" required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={productName} onChange={(e)=>{setProductName(e.currentTarget.value)}} />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
 
                             </div>

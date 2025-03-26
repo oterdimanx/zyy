@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ToastContainer } from 'react-toastify';
 import { TailSpin } from 'react-loader-spinner';
 import { get_lookbook_by_id, update_a_lookbook, delete_an_image } from '@/Services/Admin/lookbook';
 import { useRouter, useParams } from 'next/navigation';
@@ -14,7 +13,7 @@ import { setNavActive } from '@/utils/AdminNavSlice';
 import Cookies from 'js-cookie';
 import { storage } from '@/utils/Firebase'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { any, array } from 'joi';
+import LookbookUpdateFormGalleryImages from '@/components/LookbookUpdateFormGalleryImages';
 
 type Inputs = {
     _id: string,
@@ -29,6 +28,7 @@ type LookbookData = {
     lookbookImageUrls: string;
     createdAt: string;
     updatedAt: string;
+    lookbookDataUrls: string;
 };
 
 interface userData {
@@ -79,8 +79,6 @@ export default function Page() {
     const useParamObject = useParams<{ id: string }>()
     const id = useParamObject.id;
     const [urls, setUrls] = useState<any>([]);
-    var urlArray = []
-    var ii2 = 0
 
     useEffect(() => {
         const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -110,10 +108,7 @@ export default function Page() {
                 currentImagesArray = lbookData?.lookbookImageUrls.split(';')
                 setUrls({...urls,currentImagesArray})
             }
-   
-            
-            
-            console.log(urls)
+
             setValue('name', lbookData?.lookbookName ?? '')
             setValue('images', lbookData?.lookbookImageUrls ? (lbookData?.lookbookImageUrls[0] ?? '') : '')
             setValue('currentImages', urls ?? lbookData?.lookbookImageUrls)
@@ -154,7 +149,7 @@ export default function Page() {
             }, 2000);
             setLoader(false)
         } else {
-            //toast.error(res?.message)
+            console.log(res?.message)
             setLoader(false)
         }
     }
@@ -205,7 +200,6 @@ export default function Page() {
                                 <input    {...register("name")} type="text" placeholder="Type here" className="input input-bordered w-full" />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
-
                             {
                                 lbookData  && lbookData?.lookbookImageUrls != undefined && (
 
@@ -214,9 +208,6 @@ export default function Page() {
                                             <span className="label-text">Images Assocciées</span>
                                         </label>
                                         <Image src={lbookData?.lookbookImageUrls.toString() || '/pants.png'} alt='No Image Found' width={200} height={200} style={{ width: '200', height: '200' }} />
-
-
-
                                         <input accept="image/*" max="1000000"  {...register("images", { required: true })} type="file" className="file-input file-input-bordered w-full" />
                                         {errors.images && <span className="text-red-500 text-xs mt-2">This field is required and the image must be less than or equal to 1MB.</span>}
                                     </div>
@@ -224,25 +215,15 @@ export default function Page() {
                             }
                             {
                                 urls  && lbookData?.lookbookImageUrls != undefined && (
-                            <div className="form-control w-full mb-2">
-                                <label className="label">
-                                    <span className="label-text">{lbookData?.lookbookImageUrls}</span>
-                                </label >
-                                <input    {...register("currentImages")} type="text" placeholder="Type here" className="input input-bordered w-full" />
-                                {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
-                            </div >
+                                    <div className="form-control mb-3 bg-gray-50 shadow-xl grid clear">
+                                        <div className="w-full rounded h-60 grid p-500 mt-10">
+                                            <LookbookUpdateFormGalleryImages 
+                                                lookbookDataUrl={urls}
+                                                />
+                                        </div>
+                                    </div>
                                 )
                             }
-
-
-                                {
-/*
-                                urls && urls?.map((item: any) => {
-                                        ii2++
-                                        return <img src={item} className="h-auto mx-auto" key={ii2} />
-                                    })
-*/
-                                }
                             <button className="btn btn-block mt-3">Done !</button>
 
                         </form >
@@ -251,7 +232,6 @@ export default function Page() {
                 )
             }
 
-            <ToastContainer />
         </div >
     )
 }
