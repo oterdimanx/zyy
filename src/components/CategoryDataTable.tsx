@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react'
 import { useSWRConfig } from "swr"
-//import { toast } from 'react-toastify';
 import { delete_a_category, delete_an_image } from '@/Services/Admin/category';
 import DataTable from 'react-data-table-component';
 import Image from 'next/image';
@@ -10,8 +9,6 @@ import Loading from '@/app/loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import { useRouter } from 'next/navigation';
-import { cp } from 'fs';
-import { any } from 'joi';
 
 type CategoryData = {
   _id: string;
@@ -32,11 +29,8 @@ export default function CategoryDataTable() {
   const isLoading = useSelector((state: RootState) => state.Admin.catLoading);
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState<CategoryData[] | []>([]);
-  const [count, setCount] = useState(0);
-  var i = count;
   const pendingDeleteCategory = {
     'cat' : '',
-    'count' : count,
   };
   const [catList, setCatList] = useState(pendingDeleteCategory);
 
@@ -51,11 +45,12 @@ export default function CategoryDataTable() {
 
   const askToDeleteCategory = async (id: string) => {
     if( '' == catList.cat) {
-      i++
-      pendingDeleteCategory.count = i;
       pendingDeleteCategory.cat = id;
-      setCount(i)
       setCatList(pendingDeleteCategory);
+    } else{
+      setCatList({
+        'cat' : '',
+      })
     }
   }
 
@@ -76,7 +71,7 @@ export default function CategoryDataTable() {
           <button onClick={() => router.push(`/category/update-category/${row?._id}`)} className="w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700">Update</button>
 
           {
-            count > 0 && catList?.cat == row?._id ? 
+            catList?.cat == row?._id ? 
             <button onClick={() => handleDeleteCategory(row?._id, row?.categoryImage)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Are you sure ? Click again to confirm</button> : 
             <button onClick={() => askToDeleteCategory(row?._id)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Delete</button>
           }
@@ -92,14 +87,14 @@ export default function CategoryDataTable() {
 
     if (res?.success) {
       const imgRes = await delete_an_image(url);
-      //console.log(imgRes?.message)
-      //toast.success(res?.message)
       mutate('/gettingAllCategoriesFOrAdmin')
     }
     else {
-      //toast.error(res?.message)
       throw new Error (res?.message)
     }
+    setCatList({
+      'cat' : '',
+    })
   }
 
 

@@ -19,6 +19,8 @@ type ProductData = {
   productName: string,
   productDescription: string,
   productImage: string,
+  productImage2: string,
+  productImage3: string,
   productSlug: string,
   productPrice: Number,
   productQuantity: Number,
@@ -35,18 +37,16 @@ type ProductData = {
 
 export default function ProductDataTable() {
   const { mutate } = useSWRConfig()
-  const router = useRouter();
-  const [prodData, setprodData] = useState<ProductData[] | []>([]);
+  const router = useRouter()
+  const [prodData, setprodData] = useState<ProductData[] | []>([])
   const data = useSelector((state: RootState) => state.Admin.product)
-  const isLoading = useSelector((state: RootState) => state.Admin.productLoading);
-  const [search, setSearch] = useState('');
-  const [filteredData, setFilteredData] = useState<ProductData[] | []>([]);
-  const [count, setCount] = useState(0);
-  var i = count;
+  const isLoading = useSelector((state: RootState) => state.Admin.productLoading)
+  const [search, setSearch] = useState('')
+  const [filteredData, setFilteredData] = useState<ProductData[] | []>([])
   const pendingDeleteProduct = {
     'prod' : '',
-    'count' : count,
-  };
+    'myImgs' : [],
+  }
   const [prodList, setProdList] = useState(pendingDeleteProduct);
 
   useEffect(() => {
@@ -54,16 +54,19 @@ export default function ProductDataTable() {
   }, [data])
 
   useEffect(() => {
-    setFilteredData(prodData);
+    setFilteredData(prodData)
   }, [prodData])
 
-  const askToDeleteProduct = async (id: string) => {
+  const askToDeleteProduct = async (id: string, arr: any) => {
     if( '' == prodList.prod) {
-      i++
-      pendingDeleteProduct.count = i;
-      pendingDeleteProduct.prod = id;
-      setCount(i)
-      setProdList(pendingDeleteProduct);
+      pendingDeleteProduct.prod = id
+      pendingDeleteProduct.myImgs = arr
+      setProdList(pendingDeleteProduct)
+    } else{
+      setProdList({
+        'prod' : '',
+        'myImgs' : [],
+      })
     }
   }
 
@@ -88,9 +91,9 @@ export default function ProductDataTable() {
         <div className="flex items-center justify-start px-2 h-20">
           <button onClick={() => router.push(`/product/update-product/${row?._id}`)} className="w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700">Update</button>
           {
-            count > 0 && prodList?.prod == row?._id ? 
-            <button onClick={() => handleDeleteProduct(row?._id, row?.productImage)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Are you sure ? Click again to confirm</button> : 
-            <button onClick={() => askToDeleteProduct(row?._id)} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Delete</button>
+            prodList?.prod == row?._id ? 
+            <button onClick={() => handleDeleteProduct(row?._id, prodList?.myImgs)} className="w-40 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Are you sure ? Click again to confirm</button> : 
+            <button onClick={() => askToDeleteProduct(row?._id, [row?.productImage,row?.productImage2,row?.productImage3])} className="w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700">Delete</button>
           }
         </div>
       )
@@ -98,17 +101,25 @@ export default function ProductDataTable() {
 
   ];
 
-  const handleDeleteProduct = async (id: string, url: string) => {
+  const handleDeleteProduct = async (id: string, urls: any) => {
     const res = await delete_a_product(id);
-    
     if (res?.success) {
-      const imgRes = await delete_an_image(url);
-      //toast.success(res?.message)
+      for (let index = 0; index < urls.length; index++) {
+        const url = urls[index];
+        const imgRes = await delete_an_image(url);
+        if (imgRes?.success) {
+          console.log('image supprimée : ' + url)
+        }
+      }
       mutate('/gettingAllProductsFOrAdmin')
     }
     else {
       throw new Error (res?.message)
     }
+    setProdList({
+      'prod' : '',
+      'myImgs' : [],
+    })
   }
 
   useEffect(() => {
