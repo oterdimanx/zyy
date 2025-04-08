@@ -71,7 +71,8 @@ interface userData {
 
 
 export default function PendingOrdersDataTable() {
-    const { mutate } = useSWRConfig()
+
+  const { mutate } = useSWRConfig()
   const router = useRouter();
   const [orderData, setOrderData] = useState<Order[] | []>([]);
   const data = useSelector((state: RootState) => state.Admin.Order) as Order[] | [];
@@ -93,7 +94,6 @@ export default function PendingOrdersDataTable() {
   const updateOrderStatus =  async (id: string) => {
     const res =  await update_order_status(id);
     if(res?.success){
-      //toast.success(res?.message)
       mutate('gettingAllOrdersForAdmin')
     }else{
       throw (res?.message)

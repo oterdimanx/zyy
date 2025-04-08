@@ -3,8 +3,6 @@ import React, { useState , useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Hero from '@/components/Hero'
-import FeaturedProduct from '@/components/FeaturedProduct'
-import TopCategories from '@/components/TopCategories'
 import Loading from './loading'
 import { get_all_categories } from '@/Services/Admin/category'
 import { get_all_products } from '@/Services/Admin/product'
@@ -12,14 +10,14 @@ import { setCategoryData, setCatLoading, setProdLoading, setProductData, setLook
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '@/utils/UserDataSlice'
 import { RootState } from '@/Store/store'
-
+import FeaturedProduct from '@/components/FeaturedProduct'
+import TopCategories from '@/components/TopCategories'
 
 export default function Home() {
   const dispatch = useDispatch();
   const categoryLoading = useSelector((state: RootState) => state.Admin.catLoading)
   const productLoading = useSelector((state: RootState) => state.Admin.productLoading)
   const [loading, setLoading] = useState(true)
-  const [ratio, setRatio] = useState(16/9) 
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -51,16 +49,17 @@ export default function Home() {
     dispatch(setProdLoading(loading))
   }, [categoryLoading, productLoading, dispatch, loading])
 
-
   return (
     <>
-      <Navbar />
-      <Hero setRatio={setRatio} />
+      <div className="grid">
+        <Navbar />
+        <Hero />
+      </div>
       {
         loading ? <Loading /> :
           <>
             <TopCategories />
-            <FeaturedProduct  />
+            <FeaturedProduct />
             <Footer />
           </>
       }

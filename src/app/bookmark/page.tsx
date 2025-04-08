@@ -3,6 +3,8 @@
 import { get_all_bookmark_items } from '@/Services/common/bookmark'
 import { RootState } from '@/Store/store'
 import FavouriteProductDataTable from '@/components/FavouriteProductDataTable'
+import Hero from '@/components/Hero'
+import Navbar from '@/components/Navbar'
 import { setNavActive } from '@/utils/AdminNavSlice'
 import { setBookmark } from '@/utils/Bookmark'
 import Cookies from 'js-cookie'
@@ -11,7 +13,6 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { MdFavorite } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
-import { ToastContainer } from 'react-toastify'
 
 interface userData {
     email: String,
@@ -43,13 +44,24 @@ export default function Page() {
         if (bookmarkData?.success) {
             dispatch(setBookmark(bookmarkData?.data))
         } else {
-            console.log(bookmarkData?.message)
+
+            if (undefined !== Cookies.get('token') && 'login' == bookmarkData?.message) {
+                Cookies.remove('token');
+                localStorage.clear();
+                return Router.push('/auth/login?token=expired')
+            }
+
         }
         setLoading(false)
     }
 
     return (
-        <div className="w-full bg-gray-50 h-screen px-3 py-2">
+        <>
+        <div>
+          <Navbar />
+          <Hero />
+        </div>
+        <div className="w-full bg-gray-50 h-screen px-3 py-2 font-[Poppin]">
             <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
                 <ul className="dark:text-black">
                     <li>
@@ -68,7 +80,7 @@ export default function Page() {
                 <FavouriteProductDataTable />
             </div>
 
-            <ToastContainer />
         </div>
+        </>
     )
 }

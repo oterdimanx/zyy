@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Chevalier Zyy';
+  src: url('/fonts/Chevalier Open DC D Regular.woff2') format('woff2');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Chevalier Zyy';
+  src: url('/fonts/Chevalier Open DC D Regular.woff2') format('woff2');
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Chevalier Zyy';
+  src: url('/fonts/Chevalier Open DC D Regular.woff2') format('woff2');
+  font-weight: 600;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -24,4 +40,5 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    font-family: 'Chevalier Zyy';
 }

@@ -3,6 +3,8 @@
 import { get_order_details } from '@/Services/common/order'
 import { RootState } from '@/Store/store'
 import Loading from '@/app/loading'
+import Hero from '@/components/Hero'
+import Navbar from '@/components/Navbar'
 import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,7 +13,6 @@ import React, { useEffect, useState } from 'react'
 import { GrDeliver } from 'react-icons/gr'
 import { TbListDetails } from 'react-icons/tb'
 import { useSelector } from 'react-redux'
-import { ToastContainer } from 'react-toastify'
 
 interface userData {
     email: String,
@@ -69,10 +70,6 @@ interface Order {
     _id: string;
 }
 
-interface pageParam {
-    id: string
-}
-
 export default function Page() {
 
     const Router = useRouter();
@@ -108,7 +105,12 @@ export default function Page() {
     }
 
     return (
-        <div className="w-full bg-gray-50 h-screen px-2 py-2">
+        <>
+        <div>
+          <Navbar />
+          <Hero />
+        </div>
+        <div className="w-full bg-gray-50 h-screen px-2 py-2 font-[Poppin]">
             <div className="text-sm breadcrumbs border-b-2 border-b-orange-600">
                 <ul className="dark:text-black">
                     <li>
@@ -139,7 +141,7 @@ export default function Page() {
                                     return (
                                         <div key={index} className="md:w-96 m-2 w-52 h-52 bg-gray-300 flex md:flex-row flex-col items-center justify-start">
                                             <div className="relative w-1/2 h-full">
-                                                <Image src={item?.product?.productImage || './images98.png'} alt="no Image Found" fill />
+                                                <Image src={item?.product?.productImage || '/images98.png'} alt="no Image Found" fill />
                                             </div>
                                             <div className="flex  px-2 py-1 flex-col items-start justify-start">
                                                 <h1 className="my-2">{item?.product?.productName}</h1>
@@ -201,7 +203,8 @@ export default function Page() {
                         </div>
                     </div>
             }
-            <ToastContainer />
+            
         </div>
+        </>
     )
 }

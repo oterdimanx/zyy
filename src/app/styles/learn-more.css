@@ -19,14 +19,14 @@ button {
   font-family: inherit;
 
   &.learn-more {
-    width: 12rem;
+    width: 13rem;
     height: auto;
     background: transparent;
 
     .circle {
       position: relative;
       display: block;
-      margin: 0 0 0 -40px;
+      margin: 0 0 0 -15px;
       width: 3rem;
       height: 3rem;
       background: #000;
@@ -62,7 +62,7 @@ button {
     .button-text {
       position: absolute;
       top: 0;
-      left: -65px;
+      left: -25px;
       right: 0;
       bottom: 0;
       padding: 0.75rem 0;
@@ -92,4 +92,18 @@ button {
 @keyframes rollout {
   0% { transform: none;width: 25%; }
   100% { transform: none;width: 100%; }
+}
+
+.mainNav {
+  grid-column-start: 1;
+  grid-column-end: 6;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.secondaryNav {
+  grid-column-start: 6;
+  grid-column-end: 9;
+  grid-row-start: 1;
+  grid-row-end: 1;
 }

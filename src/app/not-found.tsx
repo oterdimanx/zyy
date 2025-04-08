@@ -10,7 +10,6 @@ import { setUserData } from '@/utils/UserDataSlice'
 export default function Custom404() {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true)
-    const [ratio, setRatio] = useState(16/9) 
     useEffect(() => {
         const userData = localStorage.getItem('user');
         if (!userData) return;
@@ -21,11 +20,11 @@ export default function Custom404() {
     return (
         <>
           <Navbar />
-          <Hero setRatio={setRatio} />
+          <Hero />
           {
             loading ? <Loading /> :
               <>
-                <h1>La page que vous tentez d'accéder n'existe pas.</h1>
+                <h1>La page à laquelle vous tentez d'accéder n'existe pas.</h1>
                 <Footer />
               </>
           }

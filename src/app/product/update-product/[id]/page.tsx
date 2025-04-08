@@ -122,7 +122,7 @@ export default function Page() {
   }
 
   const setProductNameValue = async  () => {
-      setProductName(slugify(productName))
+      setProductName(productName)
   }
 
   const { data, isLoading } = useSWR('/gettingProductbyID', () => get_product_by_id(id))
@@ -220,8 +220,10 @@ export default function Page() {
 
     const res = '' == newError ? await update_a_product(updatedData) : false
     const imgRes = (prodData?.productImage != undefined && '' != newError) ? await delete_an_image(prodData?.productImage) : false;
-console.log(res)
-    if (res?.success && imgRes) {
+    const imgRes2 = (prodData?.productImage2 != undefined && '' != newError) ? await delete_an_image(prodData?.productImage2) : false;
+    const imgRes3 = (prodData?.productImage3 != undefined && '' != newError) ? await delete_an_image(prodData?.productImage3) : false;
+
+    if (res?.success && imgRes && imgRes2 && imgRes3) {
       dispatch(setNavActive('Base'))
       setTimeout(() => {
         Router.push("/Dashboard")
@@ -288,14 +290,14 @@ console.log(res)
                 <label className="label">
                   <span className="label-text">Product Name</span>
                 </label >
-                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} onChange={setProductNameValue} />
+                <input {...register("name", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} />
                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
               </div >
               <div className="form-control w-full mb-2">
                 <label className="label">
                   <span className="label-text">Product Slug</span>
                 </label>
-                <input {...register("slug", { required: true })} type="text" placeholder="Type here" className="input input-bordered w-full" onChange={(e)=>{setProductName(e.currentTarget.value)}} />
+                <input {...register("slug")} required type="text" placeholder="Type here" className="input input-bordered w-full" onChange={(e)=>{setProductName(e.currentTarget.value)}} />
                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
 
               </div>

@@ -31,7 +31,11 @@ export default function Dashboard() {
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
     if (!Cookies.get('token') || user?.role !== 'admin' || user?.email !== 'olivier@terdiman.fr') {
-      Router.push('/')
+      if (undefined === Cookies.get('token')) {
+        Cookies.remove('token');
+        localStorage.clear();
+        Router.push('/auth/login?token=expired')
+      }
     }
     dispatch(setNavActive('Base'))
   }, [dispatch, Cookies, Router])
@@ -59,11 +63,11 @@ export default function Dashboard() {
   }, [categoryData, dispatch, categoryLoading, productData, productLoading , orderData , orderLoading, lookbookData, lookbookLoading, archiveData, archiveLoading ])
 
   return (
-    <div className="w-full h-screen flex bg-gray-50 overflow-hidden">
+    <div className="w-full h-screen flex bg-gray-50 overflow-hidden font-[Poppin]">
       <AdminSidebar />
-      <div className="w-full h-full">
+      <div className="w-full h-full font-[Poppin]">
         <AdminNavbar />
-        <div className="w-full h-5/6 flex flex-wrap items-start justify-center overflow-y-auto  px-4 py-2">
+        <div className="w-full h-5/6 flex flex-wrap items-start justify-center overflow-y-auto font-[Poppin] px-4 py-2">
           {categoryLoading || productLoading || lookbookLoading || archiveLoading ? <Loading /> : <SuperComponent />}
         </div>
       </div>

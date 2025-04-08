@@ -1,14 +1,8 @@
 import './styles/globals.css'
 import './styles/learn-more.css'
 import './styles/footer.css'
-import { Poppins } from 'next/font/google'
 import { Providers } from '@/Store/Provider'
 import 'react-toastify/dist/ReactToastify.css';
-
-const poppin = Poppins({
-  weight: ['100', '400'],
-  subsets: ['latin'],
-})
 
 export const metadata = {
   title: 'Zyy App',
@@ -23,7 +17,7 @@ export default function RootLayout({
 }) { 
   return (
     <html lang="fr">
-      <body className={poppin.className}>
+      <body className="zyy">
         <Providers>
           {children}
         </Providers>

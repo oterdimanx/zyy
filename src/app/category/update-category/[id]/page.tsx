@@ -207,14 +207,14 @@ export default function Page() {
                                 <label className="label">
                                     <span className="label-text">Category Name</span>
                                 </label >
-                                <input    {...register("name")} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input {...register("name")} type="text" placeholder="Type here" className="input input-bordered w-full" />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Category Slug</span>
                                 </label>
-                                <input  {...register("slug")} type="text" placeholder="Type here" className="input input-bordered w-full" />
+                                <input {...register("slug")} type="text" placeholder="Type here" className="input input-bordered w-full" />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
 
                             </div>
@@ -222,7 +222,7 @@ export default function Page() {
                                 <label className="label">
                                     <span className="label-text">Category Description</span>
                                 </label>
-                                <textarea  {...register("description")} className="textarea textarea-bordered h-24" placeholder="Description"></textarea>
+                                <textarea {...register("description")} className="textarea textarea-bordered h-24" placeholder="Description"></textarea>
                                 {errors.description && <span className="text-red-500 text-xs mt-2">This field is required</span>}
 
                             </div>

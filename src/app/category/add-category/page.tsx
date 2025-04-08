@@ -68,7 +68,8 @@ export default function AddCategory() {
 
     const [loader, setLoader] = useState(false)
     const Router = useRouter();
-    const [slugCatName, setSlugCatName] = useState<any>('')
+    const [slugCatName, SetSlugCatName] = useState<any>('')
+    const [catName, SetCatName] = useState<any>('')
     
     useEffect(() => {
         const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -79,11 +80,13 @@ export default function AddCategory() {
     }, [  Router])
 
     const categorySlug = async  (slugField:/*unresolved*/ any) => {
-        setSlugCatName(slugify(slugField))
+        SetSlugCatName(slugify(slugField))
+        SetCatName(slugField)
     }
     
     const setCategoryNameValue = async  () => {
-        setSlugCatName(slugify(slugCatName))
+        SetCatName(slugCatName)
+        SetSlugCatName(slugify(slugCatName))
     }
 
     const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
@@ -91,12 +94,19 @@ export default function AddCategory() {
     });
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
+
         setLoader(true)
         const CheckFileSize = maxSize(data.image[0]);
         if (CheckFileSize) throw new Error ('Image size must be less then 1MB')
         const uploadImageToFirebase = await uploadImages(data.image[0]);
 
-        const finalData = { categoryName: data.name, categoryDescription: data.description, categoryImage: uploadImageToFirebase, categorySlug: data.slug, categorySizes: data.sizes.toString() }
+        const finalData = { 
+            categoryName: catName != '' ? catName : data.name,
+            categoryDescription: data.description, 
+            categoryImage: uploadImageToFirebase, 
+            categorySlug: slugify(slugCatName), 
+            categorySizes: data.sizes.toString() 
+        }
 
         const res = await add_new_category(finalData)
         if (res.success) {
@@ -152,14 +162,14 @@ export default function AddCategory() {
                                 <label className="label">
                                     <span className="label-text">Category Name</span>
                                 </label >
-                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onChange={setCategoryNameValue} onBlur={(e)=>{categorySlug(e.currentTarget.value)}} />
+                                <input {...register("name")} required type="text" placeholder="Type here" className="input input-bordered w-full" onChange={setCategoryNameValue} onBlur={(e)=>{categorySlug(e.currentTarget.value)}} />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Category Slug</span>
                                 </label>
-                                <input required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={slugCatName} onChange={(e)=>{setSlugCatName(e.currentTarget.value)}} />
+                                <input {...register("slug")} required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{e.currentTarget.value = slugify(e.currentTarget.value)}} value={slugCatName} onChange={(e)=>{SetSlugCatName(e.currentTarget.value)}} />
                                 {errors.slug && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div>
                             <div className="form-control">

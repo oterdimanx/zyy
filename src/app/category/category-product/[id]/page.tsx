@@ -6,9 +6,10 @@ import ProductCard from '@/components/ProductCard'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { ToastContainer } from 'react-toastify'
 import useSWR from 'swr'
 import Footer from '@/components/Footer'
+import Navbar from '@/components/Navbar'
+import Hero from '@/components/Hero'
 
 interface pageParam {
     id: string
@@ -45,8 +46,13 @@ export default function Page() {
     })
 
     return (
+        <>
+        <div>
+          <Navbar />
+          <Hero />
+        </div>
         <div className="w-full h-screen dark:text-black bg-gray-50 py-4 px-2">
-            <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
+            <div className="text-sm breadcrumbs border-b-2 border-b-orange-600">
                 <ul>
                     <li>
                         <Link href={'/'}>
@@ -85,6 +91,6 @@ export default function Page() {
 
             <Footer />
         </div>
-
+        </>
     )
 }

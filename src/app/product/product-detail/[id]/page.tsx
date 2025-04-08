@@ -8,7 +8,6 @@ import { BiCartAdd } from 'react-icons/bi'
 import { RiBookMarkFill } from 'react-icons/ri'
 import { DiCodeigniter } from 'react-icons/di'
 import useSWR from 'swr'
-import { ToastContainer } from 'react-toastify'
 import { get_product_by_id } from '@/Services/Admin/product'
 import Loading from '@/app/loading'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,10 +15,8 @@ import { RootState } from '@/Store/store'
 import { add_to_cart } from '@/Services/common/cart'
 import { setUserData } from '@/utils/UserDataSlice'
 import { bookmark_product, get_all_bookmark_items } from '@/Services/common/bookmark'
-
-interface pageParam {
-    id: string
-}
+import Navbar from '@/components/Navbar'
+import Hero from '@/components/Hero'
 
 type ProductData = {
     _id: string,
@@ -51,7 +48,6 @@ export default function Page() {
     const useParamObject = useParams<{ id: string }>()
     const id  = useParamObject.id;
     const { data, isLoading } = useSWR('/gettingProductbyID', () => get_product_by_id(id))
-    //if (data?.success !== true) throw new Error(data?.message)
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -91,7 +87,12 @@ export default function Page() {
     }
 
     return (
-        <div className="w-full h-full dark:text-black lg:h-screen bg-gray-200 py-4 px-2">
+        <>
+        <div>
+          <Navbar />
+          <Hero />
+        </div>
+        <div className="w-full h-full dark:text-black lg:h-screen bg-white py-4 px-2">
             <div className="text-sm breadcrumbs  border-b-2 py-2 px-2 border-b-orange-600">
                 <ul>
                     <li>
@@ -146,7 +147,8 @@ export default function Page() {
                         </div>
                 }
             </div>
-            <ToastContainer />
+
         </div>
+        </>
     )
 }

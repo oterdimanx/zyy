@@ -31,7 +31,7 @@ export async function GET(req: Request) {
       }
 
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized Please login!" });
+      return NextResponse.json({ success: false, message: "login" });
     }
 
 

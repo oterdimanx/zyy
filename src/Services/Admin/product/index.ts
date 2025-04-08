@@ -81,8 +81,6 @@ export const add_new_product = async (formData: any) => {
     }
   }
 
-
-  
   export const get_product_by_category_id = async (id:string) => {
     try {
       const res = await fetch(`/api/common/product/get-product-by-category-id?id=${id}`, {

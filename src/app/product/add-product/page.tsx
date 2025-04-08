@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/store';
 import Cookies from 'js-cookie';
 import slugify from 'react-slugify';
-import { useSWRConfig } from "swr"
 import { add_new_product } from '@/Services/Admin/product';
 
 type Inputs = {
@@ -97,7 +96,7 @@ export default function AddProduct() {
     }
     
     const setProductNameValue = async  () => {
-        setProductName(slugify(productName))
+        setProductName(productName)
     }
 
     const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
@@ -107,6 +106,7 @@ export default function AddProduct() {
     const onSubmit: SubmitHandler<Inputs> = async data => {
 
         setLoader(true)
+        
         const CheckFileSize = maxSize(data.image[0]);
         if (CheckFileSize) throw ('Image size must be less then 1MB')
         const CheckFileSize2 = maxSize(data.image2[0]);
@@ -118,7 +118,7 @@ export default function AddProduct() {
         const uploadImageToFirebase3 = await uploadImages(data.image3[0]);
 
         const finalData = { 
-            productName: productName != '' ? productName : data.name, 
+            productName: data.name != '' ?  data.name : productName, 
             productDescription: data.description, 
             productImage: uploadImageToFirebase,
             productImage2: uploadImageToFirebase2, 
@@ -131,7 +131,7 @@ export default function AddProduct() {
         }
 
         const res = await add_new_product(finalData)
-        console.log(res)
+
         if (res.success) {
 
             setTimeout(() => {
@@ -202,7 +202,7 @@ export default function AddProduct() {
                                 <label className="label">
                                     <span className="label-text">Product Name</span>
                                 </label >
-                                <input name="name" required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} onChange={setProductNameValue} />
+                                <input {...register("name")} required type="text" placeholder="Type here" className="input input-bordered w-full" onBlur={(e)=>{productSlug(e.currentTarget.value)}} />
                                 {errors.name && <span className="text-red-500 text-xs mt-2">This field is required</span>}
                             </div >
                             <div className="form-control w-full mb-2">
