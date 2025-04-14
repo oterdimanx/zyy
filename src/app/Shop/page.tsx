@@ -45,15 +45,14 @@ export default function Shop() {
     <>
       <div>
         <Navbar />
-        <Hero />
       </div>
       {
         catLoading ? <Loading /> :
           <>
             <div className="flex h-full bg-white/95 text-black">
-            <div className="border-r-2 border-r-red-900 flex-initial">
+            <div className="border-r-2 border-r-red-900 flex-initial w-[260px]">
               <p className="mt-3 pt-8 pb-1 pl-9 pr-8 flex-initial text-xl uppercase">Categories</p>
-              <ul className="relative pl-9">
+              <ul className="pl-9">
                 <li className="pt-2"><Link href={"/Dashboard"}>Dashboard</Link></li>
                 <li className="pt-2"><Link href={"/Shop"} onClick={()=>SetCategoryId('all')}>ALL</Link></li>
                 {

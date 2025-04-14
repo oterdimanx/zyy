@@ -27,7 +27,6 @@ export default function Page() {
 
         <>
           <Navbar />
-          <Hero />
           {
               <>
                 <div className="w-full h-full bg-gray-50 px-2">

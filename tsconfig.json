@@ -26,6 +26,6 @@
       
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/middleware/AuthCheck.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/middleware/AuthCheck.js", "src/app/api/common/product/getProducts/route.js"],
   "exclude": ["node_modules"]
 }

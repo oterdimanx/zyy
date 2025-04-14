@@ -144,7 +144,6 @@ export default function Page() {
         <>
         <div>
           <Navbar />
-          <Hero />
         </div>
         <div className="w-full h-full bg-white px-2 font-[Poppin]">
             <div className="text-sm breadcrumbs border-b-2 border-b-orange-600">

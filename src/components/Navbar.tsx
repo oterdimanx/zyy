@@ -30,8 +30,8 @@ export default function Navbar() {
     }
 
     return (
-        <div className={`navbar ${Scrolled ? "bg-white/95  " : "bg-white/95"} mainNav flex top-0 left-0 border-b-2 border-b-red-900 pb-0 pt-0`}>
-            <div className="border-r-2 border-r-red-900 flex-none">
+        <div className={`navbar ${Scrolled ? "bg-white/95  " : "bg-white/95"} mainNav top-0 left-0 border-b-2 border-b-red-900 pb-0 pt-0`}>
+            <div className="border-r-2 border-r-red-900 flex-none block">
                 <div className="dropdown">
                     <label className="text-white">
                         <Image src={'/logo_zyy-02.png'} alt="logo_zyy-02.png" width="250" height="250" sizes="30vw" className="md:block" onClick={() => router.push("/")} />
@@ -57,7 +57,7 @@ export default function Navbar() {
                     </li>
                     <li>
                         <div className="text-sm m-w-full overflow-x-auto text-black pt-10">
-                            <ul className="dark:text-black">
+                            <ul className="dark:text-black flex">
                             <li className="inline-block mt-30 pr-10">
                                 <Link href={'/'}>
                                 ZYY FALL 24
@@ -74,7 +74,7 @@ export default function Navbar() {
                     </li>
                 </ul>
             </div>
-            <div className="navbar-end m-auto m-width-100">
+            <div className="navbar-end m-auto">
                 <div className="flex-none">
                     {
                         user ?

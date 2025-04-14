@@ -49,7 +49,6 @@ export default function Page() {
         <>
         <div>
           <Navbar />
-          <Hero />
         </div>
         <div className="w-full h-screen dark:text-black bg-gray-50 py-4 px-2">
             <div className="text-sm breadcrumbs border-b-2 border-b-orange-600">

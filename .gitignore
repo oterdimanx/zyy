@@ -44,3 +44,7 @@ storage.rules
 
 #github
 .github*
+
+#local files
+/public/sitemap.xml
+/public/robots.txt

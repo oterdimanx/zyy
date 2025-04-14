@@ -9,9 +9,10 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/generate-sitemap.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
@@ -25,7 +26,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.39.0",
     "eslint-config-next": "^15.2.1",
-    "firebase": "^10.14.1",
+    "firebase": "^11.6.0",
     "joi": "^17.13.3",
     "js-cookie": "^3.0.5",
     "js-cookies": "^1.0.4",

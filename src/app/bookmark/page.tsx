@@ -59,7 +59,6 @@ export default function Page() {
         <>
         <div>
           <Navbar />
-          <Hero />
         </div>
         <div className="w-full bg-gray-50 h-screen px-3 py-2 font-[Poppin]">
             <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">

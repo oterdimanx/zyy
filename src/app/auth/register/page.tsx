@@ -2,7 +2,7 @@
 
 import React, { useState , useEffect , FormEvent } from 'react'
 import Link from 'next/link'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { register_me } from '@/Services/auth';
 import { useRouter } from 'next/navigation';
@@ -108,7 +108,7 @@ export default function  Register (){
           </div>
         </div>
       </div>
-      <ToastContainer />
+
     </div>
     </>
   )
