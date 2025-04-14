@@ -2,11 +2,11 @@
 const { MongoClient } = require('mongodb');
 
 async function GET(req) {
-  const client = new MongoClient('mongodb+srv://local:lJ4Ks2MxaDxI8fsG@zyyclusterinstance.6nl8lxl.mongodb.net/?retryWrites=true&w=majority&appName=ZyyClusterInstance');
+  const client = new MongoClient(process.env.DB_URI);
   try {
     await client.connect();
     //console.log('MongoDB connected');
-    const db = client.db('zyyLocal');
+    const db = client.db(process.env.DB_NAME);
 
     // Fetch products
     const products = await db.collection('products').find().toArray();
