@@ -23,8 +23,8 @@ export default function AdminNavbar() {
         <div className="navbar dark:text-black bg-white">
             <div className="flex-1">
                 <div className="dropdown md:hidden">
-                    <label tabIndex={0} className="btn btn-active btn-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                    <label tabIndex={0} className="btn btn-active btn-circle bg-white/95">
+                        <Image src={'/logo_zyy-02.png'} alt="logo_zyy-02.png" width="250" height="150" sizes="10vw" className="md:block bg-white/95" />
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow text-black bg-gray-50 rounded-box w-52">
                         <li onClick={() => dispatch(setNavActive('Base'))}><button>Homepage</button></li>
@@ -45,7 +45,7 @@ export default function AdminNavbar() {
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 relative rounded-full">
-                            <Image className='rounded-full' fill alt='none' src="/profile.jpg" sizes='50vw'/>
+                            <Image className='rounded-full' alt='none' src="/profile.jpg" sizes='50vw' height="150" width="150"/>
                         </div>
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-50 rounded-box w-52">

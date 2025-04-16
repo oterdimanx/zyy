@@ -10,14 +10,15 @@ import { MdOutlinePendingActions } from 'react-icons/md'
 import { GrCompliance } from 'react-icons/gr'
 import { setNavActive } from '@/utils/AdminNavSlice'
 import { useDispatch } from 'react-redux'
+import Image from 'next/image'
 
 
 export default function AdminSidebar() {
     const dispatch =  useDispatch();
     return (
-        <div className="w-60 hidden dark:text-black md:block bg-white h-full">
+        <div className="w-60 hidden dark:text-black md:block bg-white h-full inline">
             <div className="w-full text-center py-2 px-2 h-20">
-                <h1 className="flex text-2xl font-semibold items-center justify-center"><RxDashboard className="mx-2" /> Dashboard</h1>
+                <Image src={'/logo_zyy-02.png'} alt="logo_zyy-02.png" width="250" height="150" sizes="10vw" className="md:block bg-white/95 inline" />
             </div>
             <div className="w-full">
                 <ul className="flex px-4 flex-col items-start justify-center">

@@ -12,6 +12,8 @@ import { setUserData } from '@/utils/UserDataSlice'
 import { RootState } from '@/Store/store'
 import FeaturedProduct from '@/components/FeaturedProduct'
 import TopCategories from '@/components/TopCategories'
+import BackgroundContainer from '@/components/BackgroundContainer'
+import HomepageFeaturedProducts from '@/components/HomepageFeaturedProducts'
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -51,13 +53,16 @@ export default function Home() {
 
   return (
     <>
-      <div className="grid">
-        <Navbar />
+      <div>
+        <Navbar isHomePage={true} />
         <Hero />
       </div>
       {
         loading ? <Loading /> :
           <>
+            <BackgroundContainer imageUrl={"/homepage.png"} >
+              <HomepageFeaturedProducts />
+            </BackgroundContainer>
             <TopCategories />
             <FeaturedProduct />
             <Footer />

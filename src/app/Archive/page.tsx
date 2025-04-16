@@ -14,12 +14,11 @@ export default function Page() {
 
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true)
-    const [ratio, setRatio] = useState(16/9)
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
-        if (!userData) return;
-        dispatch(setUserData(JSON.parse(userData)));
+        //if (!userData) return;
+        if (userData) dispatch(setUserData(JSON.parse(userData)))
         setLoading(false)
       }, [])
 
